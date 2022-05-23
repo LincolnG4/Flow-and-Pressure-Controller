@@ -97,6 +97,11 @@ int mcfOutput2 = 1 ;
 int mcfOutput3 = 1 ;
 int mcfOutput4 = 1 ;
 
+int mfcSCCM1 = 500 ;
+int mfcSCCM2 = 500 ;
+int mfcSCCM3 = 500 ;
+int mfcSCCM4 = 500 ;
+
 float Calibrated_MFC_1 = 1;
 float Calibrated_MFC_2 = 1;
 float Calibrated_MFC_3 = 1;
@@ -252,22 +257,36 @@ uint32_t numberu4;
 //////////////////// FUNCTIONS /////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
+float readEnable(NexText t_calibrate){
+      float Text2Number;
+      char bufferCalibrateTest[10];
+
+      memset(bufferCalibrateTest, 10, sizeof(bufferCalibrateTest));
+      t_calibrate.getText(bufferCalibrateTest, sizeof(bufferCalibrateTest));
+
+      Text2Number = atof(bufferCalibrateTest);
+      return Text2Number;
+}
 
 void p0_b1_Press(void *ptr) {
   CurrentPage = 1;
+
   p2.show();
 }
 
 void p2_b1_Press(void *ptr) {
   CurrentPage = 0;
+
   p0.show();
 }
 void p0_b2_Press(void *ptr) {
   CurrentPage = 2;
+
   p1.show();
 }
 void p1_b0_Press(void *ptr) {
   CurrentPage = 0;
+
   p0.show();
 }
 
@@ -339,12 +358,12 @@ float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32
   
 } 
 
-float MFCRead(int MFC,char* mfcOutputString,NexText t,NexText t_out, float Calibrated_MFC){
+float MFCRead(int MFC,char* mfcOutputString,NexText t,NexText t_out, float Calibrated_MFC,int mfcSCCM){
   float gas_factor_in;
   float output_MFC_factor;
   char bufferText[10];
 
-  MFC_V = 100*(sinalMKS/SinalMCU)*((SinalMCU*(analogRead(MFC)))/bitsMCU); 
+  MFC_V = (mfcSCCM*(sinalMKS/SinalMCU)*((SinalMCU*(analogRead(MFC)))/bitsMCU))/SinalMCU; 
   
   memset(bufferText, 10, sizeof(bufferText));
   t_out.getText(bufferText, sizeof(bufferText));
@@ -354,7 +373,7 @@ float MFCRead(int MFC,char* mfcOutputString,NexText t,NexText t_out, float Calib
   output_MFC_factor = float(MFC_V)*(gas_factor_in/Calibrated_MFC);
 
   dtostrf(output_MFC_factor, 1, 2, mfcOutputString); 
-  //itoa(output_MFC_factor,mfcOutputString, 10);     
+  //itoa(output_MFC_factor,mfcOutputString, 10);
   t.setText(mfcOutputString);
 
   return output_MFC_factor;
@@ -369,7 +388,7 @@ void SendTextT4(float Pirani_V){
 
 void WriteSD(File myFile,String message){
   if (myFile) {
-    //Serial.print("Writing to test.txt...");
+    Serial.print(String(myFile) + " Writing ...");
     myFile.println(message);
     // close the file:
     myFile.close();
@@ -391,19 +410,24 @@ float ReadCalibrate(NexText t_calibrate){
     return Text_Number;
 }
 
-int MFCsetvalve(NexNumber n,uint32_t number){
-  int val = number;
 
-  n.getValue(&number);
+void MfcPwmON(int PWM_INPUT,int delta,char* buffer,NexText t,NexNumber n){
+  uint32_t val;
+
+  n.getValue(&val);
+  
   val = map(val, 0, 500, 0, 255);
 
-  return val;
-}
   
-  
-void MfcPwmON(int PWM_INPUT,int delta,char* buffer,NexText t,int val){
-
   analogWrite(PWM_INPUT, val);
+  
+  itoa(delta,buffer, 10);
+  t.setText(buffer);
+}
+
+void MfcPwmClose(int PWM_INPUT,int delta,char* buffer,NexText t){
+
+  analogWrite(PWM_INPUT, 0);
   
   itoa(delta,buffer, 10);
   t.setText(buffer);
@@ -416,9 +440,25 @@ void MfcPwmOFF(int PWM_INPUT,NexCheckbox c){
 
 void setup() {
   Serial1.begin(115200);
-  Serial.begin(115200);
-  //Serial1.begin(9600);
+  Serial2.begin(115200);
 
+  //DEBUG SERIAL
+  Serial.begin(9600);
+
+  //Serial.println("[INFO] - Debug serial started");
+
+  if (Serial1.available() > 0) {
+    //Serial.println("[INFO]- LCD serial started");
+  }
+  else{
+    //Serial.println("[ERROR]- LCD serial NOT started");
+  }
+  if (Serial2.available() > 0) {
+    //Serial.println("[INFO] - ESP32 serial started");
+  }
+  else{
+    //Serial.println("[ERROR]- ESP32 serial NOT started");
+  }
   //PINOUT MFC-PWM 
   pinMode(PWM_INPUT1, OUTPUT);
   pinMode(PWM_INPUT2, OUTPUT);
@@ -433,9 +473,7 @@ void setup() {
   pinMode(Close_MFC3, OUTPUT);
   pinMode(Close_MFC4, OUTPUT);
  
-  // Set the current date, and time in the following format:
-  // seconds, minutes, hours, day of the week, day of the month, month, year
-  //myRTC.setDS1302Time(10, 17, 3, 3, 29, 3, 2022);
+
 
   digitalWrite(Close_MFC1, HIGH);
   digitalWrite(Close_MFC2, HIGH);
@@ -463,63 +501,67 @@ void setup() {
   // SD Card Initialization
   if (SD.begin())
   {
-    //Serial.println("SD card is ready to use.");
+    //Serial.println("[INFO] - SD card is ready to use.");
     boolean SD_Status= true;
   } else
   {
-    //Serial.println("SD card initialization failed");
+    //Serial.println("[ERROR] - SD card initialization failed");
     return;
   }
+
+  //Serial.println("[INFO]- Setup is done!");
 }
 
 
 
 void loop() {
-  int MFCset_value1;
-  int MFCset_value2;
-  int MFCset_value3;
-  int MFCset_value4;
 
   // put your main code here, to run repeatedly:
-  delay(200);
+  
   
   nexLoop(nex_listen_list); // NEXTION STARTS
+  delay(200);
   
-  v0.getValue(&pageVar);
 
+  
+/*
+v0.getValue(&pageVar);
   if (pageVar == 10){
-   CurrentPage = 0;
-   p0.show();
-   pageVar=0;
-   delay(500);
+   
+    CurrentPage = 0;
+    p0.show();
+    pageVar=0;
+    delay(500);
+   
   }
+*/
+
     /////////////////////////////////////////////////////////////////
    //////////////////// PAGINA 1- MAIN PAGE ////////////////////////
   /////////////////////////////////////////////////////////////////
 
   if(CurrentPage == 1){
-    
-    
+    //Serial.println("[INFO] - Current = page 1");
     CurrentPage = 1;
-
-
     //DS BUTTON
     bt8.getValue(&dual_state);
     
+    v0.getValue(&pageVar);
 
-    //IF BOTAO MFC TURNED ON
-    if(dual_state) 
-    {
-        
-      v0.getValue(&pageVar);
-
-      if (pageVar == 10){
+    if (pageVar == 10){
+     
       CurrentPage = 0;
       p0.show();
       pageVar=0;
       delay(500);
-      }
+        
+    }
 
+    //IF BOTAO MFC TURNED ON
+    if(dual_state) 
+    {
+      //Serial.println("[INFO] - MasterKey on");
+    
       //GET STATE MFC CHECKBOX
       c0.getValue(&checkbox1);
       c1.getValue(&checkbox2);
@@ -532,12 +574,13 @@ void loop() {
       //PRINT PIRANI VALUES 
       Pirani_V = PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4);
       SendTextT4(Pirani_V);
-      
+      //Serial.println("[INFO] - Pirani Torr " + String(Pirani_V));
+
       myRTC.updateTime();
 
       TimeString = String(myRTC.dayofmonth) + "/" + String(myRTC.month)+ "/" +  String(myRTC.year)  + " " + String(myRTC.hours)  + ":" + String(myRTC.minutes) + ":" + String(myRTC.seconds);
       stamp.setDateTime(myRTC.year, myRTC.month, myRTC.dayofmonth, myRTC.hours, myRTC.minutes, myRTC.seconds);
-      
+      //Serial.println("[INFO] - Time " + TimeString);
       uint32_t unix = stamp.getUnix();
 
       uint32_t start_mfc1;
@@ -558,22 +601,32 @@ void loop() {
       Pirani_CSV = SD.open("PIRANI.csv", FILE_WRITE);
       String messagePirani = TimeString + "," + String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)); //
       WriteSD(Pirani_CSV,messagePirani);
+      
+
      
       if (ESP_ENABLE==0){
         ESP_TIMER=unix;  
         ESP_ENABLE=1;
+        //Serial.println("[INFO] - ESP32 Enable " );
       }
 
     if(checkbox1 == 1 || checkbox2 == 1 || checkbox3 == 1 || checkbox4 == 1  ){
+
+    float MFC1_value;
+    float MFC2_value;
+    float MFC3_value;
+    float MFC4_value;
+
       /////////////////////////////////////////////////////////////////
      //////////////////// CHECKBOX 1 - MFC 1 /////////////////////////
     /////////////////////////////////////////////////////////////////
 
     if(checkbox1){
-      bt2.getValue(&MFC1_mode_linear);
+      bt2.getValue(&MFC1_mode_linear);  
       bt6.getValue(&MFC1_mode_pulse);
       //////////////////// LINEAR - MFC 1 /////////////////////////
       if(MFC1_mode_linear==1 && MFC1_mode_pulse==0){
+
         //OPEN VALVE
         digitalWrite(Close_MFC1, LOW);
 
@@ -582,29 +635,38 @@ void loop() {
 
         if(timer_enable == 0){
           n1.getValue(&timerMFC1);
+          //Serial.println("[INFO] - MFC1 - Timer set  = " + String(timerMFC1) );
           start_mfc1 = unix;
           timer_enable = 1;
-          MFCset_value1 = MFCsetvalve(n0,numberu1);
         }
         
         delta = unix - start_mfc1;
 
         if(timerMFC1 >= delta){
-          MfcPwmON(PWM_INPUT1,delta,buffer,t15,MFCset_value1);
-          String message1 = TimeString + "," + String(MFCRead(MFC,mfcOutputString,t11,t8,Calibrated_MFC_1)); //
+          MfcPwmON(PWM_INPUT1,delta,buffer,t15,n0);
+          MFC1_value = MFCRead(MFC,mfcOutputString,t11,t8,Calibrated_MFC_1,mfcSCCM1);
+          String message1 = TimeString + "," + String(MFC1_value); //
           WriteSD(MFC_CSV_1,message1);
+          //Serial.println("[INFO] - MFC1 - Measure = " + message1 );
 
-        }else {
+        }
+        else {
           MfcPwmOFF(PWM_INPUT1,c0);
           digitalWrite(Close_MFC1, HIGH);
+          //Serial.println("[INFO] - MFC1 - Turned OFF");
           checkbox1 = 0;
+
+          delta=0;
+          delta_pulse= 0;
+          timer_enable = 0;
+          timer_enable_pulse = 0;
         }
 
       }
       
       //////////////////// PULSE - MFC 1 /////////////////////////
       if(MFC1_mode_pulse==1 && MFC1_mode_linear==0){
-      
+        
         //OPEN VALVE
         digitalWrite(Close_MFC1, LOW);
 
@@ -612,12 +674,15 @@ void loop() {
         MFC_CSV_1 = SD.open("MFC1.csv", FILE_WRITE);
 
         if(timer_enable_pulse == 0){
+          //Serial.println("[INFO] - MFC1 - Turned ON");
           n1.getValue(&timerMFC1_pulse);
+          //Serial.println("[INFO] - MFC1 - Turned ON");
           n8.getValue(&timerMFC1_pulse_on);
+          //Serial.println("[INFO] - MFC1 - Turned ON");
           n9.getValue(&timerMFC1_pulse_off);
+          //Serial.println("[INFO] - MFC1 - Turned ON");
           total1=timerMFC1_pulse_on+timerMFC1_pulse_off;
 
-          MFCset_value1 = MFCsetvalve(n0,numberu1);
           cycle_on=timerMFC1_pulse_on/float(total1);
           start_mfc1_pulse = unix;
           timer_enable_pulse = 1;
@@ -632,23 +697,32 @@ void loop() {
           if( ((delta_pulse%total1)/float(total1)) < cycle_on ){
             //OPEN VALVE
             digitalWrite(Close_MFC1, LOW);
-            MfcPwmON(PWM_INPUT1,delta_pulse,buffer,t15,MFCset_value1);
-            String message1 = TimeString + "," + String(MFCRead(MFC,mfcOutputString,t11,t8,Calibrated_MFC_1)); //
+            MfcPwmON(PWM_INPUT1,delta_pulse,buffer,t15,n0);
+            MFC1_value = MFCRead(MFC,mfcOutputString,t11,t8,Calibrated_MFC_1,mfcSCCM1);
+            String message1 = TimeString + "," + String(MFC1_value); //
             WriteSD(MFC_CSV_1,message1);
           }
           else{
             //CLOSE VALVE
             digitalWrite(Close_MFC1, HIGH);
-            String message1 = TimeString + "," + String(MFCRead(MFC,mfcOutputString,t11,t8,Calibrated_MFC_1)); //
+            MfcPwmClose(PWM_INPUT1,delta_pulse,buffer,t15);
+            MFC1_value = MFCRead(MFC,mfcOutputString,t11,t8,Calibrated_MFC_1,mfcSCCM1);
+            String message1 = TimeString + "," + String(MFC1_value); //
             WriteSD(MFC_CSV_1,message1);
           }
 
         }
+        
         else {
           MfcPwmOFF(PWM_INPUT1,c0);
           checkbox1 = 0;
           digitalWrite(Close_MFC1, HIGH);
+          delta=0;
+          delta_pulse= 0;
+          timer_enable = 0;
+          timer_enable_pulse = 0;
         }
+        
       }
     }
     else {
@@ -686,15 +760,16 @@ void loop() {
             n2.getValue(&timerMFC2);
             start_mfc2 = unix;
             timer_enable2 = 1;
-            MFCset_value2 = MFCsetvalve(n3,numberu2);
+            
           }
           // unsigned long currentMillis = millis()/1000;
           delta2 = unix - start_mfc2; 
 
           if(timerMFC2 >= delta2){
             
-            MfcPwmON(PWM_INPUT2,delta2,buffer2,t16,MFCset_value2); 
-            String message2 = TimeString + "," + String(MFCRead(MFC2,mfcOutputString,t12,t19,Calibrated_MFC_2)); //
+            MfcPwmON(PWM_INPUT2,delta2,buffer2,t16,n3); 
+            MFC2_value = MFCRead(MFC2,mfcOutputString,t12,t19,Calibrated_MFC_2,mfcSCCM2);
+            String message2 = TimeString + "," + String(MFC2_value); 
             WriteSD(MFC_CSV_2,message2); 
           }
           else {
@@ -702,6 +777,12 @@ void loop() {
             digitalWrite(Close_MFC2, HIGH);
             
             checkbox2 = 0;
+            timer_enable2 = 0;
+            int delta2 = 0;
+            timer_enable_pulse2 = 0;
+            
+            int delta_pulse2= 0;
+            
           }  
         } 
 
@@ -720,7 +801,7 @@ void loop() {
           n11.getValue(&timerMFC2_pulse_off);
           total2=timerMFC2_pulse_on+timerMFC2_pulse_off;
 
-          MFCset_value2 = MFCsetvalve(n3,numberu2);
+          
           cycle2_on=timerMFC2_pulse_on/float(total2);
           
           start_mfc2_pulse = unix;
@@ -737,15 +818,18 @@ void loop() {
             
             //OPEN VALVE
             digitalWrite(Close_MFC2, LOW);
-            MfcPwmON(PWM_INPUT2,delta2_pulse,buffer2,t16,MFCset_value2); 
-            String message2 = TimeString + "," + String(MFCRead(MFC2,mfcOutputString,t12,t19,Calibrated_MFC_2)); //
+            MfcPwmON(PWM_INPUT2,delta2_pulse,buffer2,t16,n3); 
+            MFC2_value = MFCRead(MFC2,mfcOutputString,t12,t19,Calibrated_MFC_2,mfcSCCM2);
+            String message2 = TimeString + "," + String(MFC2_value);
             WriteSD(MFC_CSV_2,message2); 
           }
           else{
             
             //CLOSE VALVE
-            digitalWrite(Close_MFC2, HIGH); 
-            String message2 = TimeString + "," + String(MFCRead(MFC2,mfcOutputString,t12,t19,Calibrated_MFC_2)); //
+            digitalWrite(Close_MFC2, HIGH);
+            MfcPwmClose(PWM_INPUT2,delta2_pulse,buffer2,t16);  
+            MFC2_value = MFCRead(MFC2,mfcOutputString,t12,t19,Calibrated_MFC_2,mfcSCCM2);
+            String message2 = TimeString + "," + String(MFC2_value); 
             WriteSD(MFC_CSV_2,message2); 
           }
 
@@ -755,6 +839,11 @@ void loop() {
           MfcPwmOFF(PWM_INPUT2,c1);
           
           checkbox2 = 0;
+          timer_enable2 = 0;
+          int delta2 = 0;
+          timer_enable_pulse2 = 0;
+          
+          int delta_pulse2= 0;
         }
       }
 
@@ -793,7 +882,7 @@ void loop() {
           n4.getValue(&timerMFC3);
           start_mfc3 = unix;
           timer_enable3 = 1;
-          MFCset_value3 = MFCsetvalve(n6,numberu3);
+          
         }
         
         // unsigned long currentMillis = millis()/1000;
@@ -801,8 +890,9 @@ void loop() {
         
         if(timerMFC3 >= delta3){
          
-          MfcPwmON(PWM_INPUT3,delta3,buffer3,t17,MFCset_value3);
-          String message3 = TimeString + "," + String(MFCRead(MFC3,mfcOutputString,t13,t20,Calibrated_MFC_3)); //
+          MfcPwmON(PWM_INPUT3,delta3,buffer3,t17,n6);
+          MFC3_value = MFCRead(MFC3,mfcOutputString,t13,t20,Calibrated_MFC_3,mfcSCCM3);
+          String message3 = TimeString + "," + String(MFC3_value); //
           WriteSD(MFC_CSV_3,message3); 
         }
         else {
@@ -810,6 +900,10 @@ void loop() {
           digitalWrite(Close_MFC3, HIGH);
           MfcPwmOFF(PWM_INPUT3,c2);
           checkbox3 = 0;
+          timer_enable3 = 0;
+          int delta3 = 0;
+          timer_enable_pulse3 = 0;
+          int delta_pulse3= 0;
         }
       }
 
@@ -829,7 +923,7 @@ void loop() {
           total3=timerMFC3_pulse_on+timerMFC3_pulse_off;
 
           cycle3_on=timerMFC3_pulse_on/float(total3);
-          MFCset_value3 = MFCsetvalve(n6,numberu3);
+          
           start_mfc3_pulse = unix;
           timer_enable_pulse3= 1;
           
@@ -844,15 +938,18 @@ void loop() {
            
             //OPEN VALVE
             digitalWrite(Close_MFC3, LOW);
-            MfcPwmON(PWM_INPUT3,delta3_pulse,buffer3,t17,MFCset_value3); 
-            String message3 = TimeString + "," + String(MFCRead(MFC3,mfcOutputString,t13,t20,Calibrated_MFC_3)); //
+            MfcPwmON(PWM_INPUT3,delta3_pulse,buffer3,t17,n6); 
+            MFC3_value = MFCRead(MFC3,mfcOutputString,t13,t20,Calibrated_MFC_3,mfcSCCM3);
+            String message3 = TimeString + "," + String(MFC3_value); //
             WriteSD(MFC_CSV_3,message3); 
           }
           else{
         
             //CLOSE VALVE
             digitalWrite(Close_MFC3, HIGH); 
-            String message3 = TimeString + "," + String(MFCRead(MFC3,mfcOutputString,t13,t20,Calibrated_MFC_3)); //
+            MfcPwmClose(PWM_INPUT3,delta3_pulse,buffer3,t17);
+            MFC3_value = MFCRead(MFC3,mfcOutputString,t13,t20,Calibrated_MFC_3,mfcSCCM3);
+            String message3 = TimeString + "," + String(MFC3_value); //
             WriteSD(MFC_CSV_3,message3);  
           }
 
@@ -862,6 +959,10 @@ void loop() {
           digitalWrite(Close_MFC3, HIGH);
           
           checkbox3 = 0;
+          timer_enable3 = 0;
+          int delta3 = 0;
+          timer_enable_pulse3 = 0;
+          int delta_pulse3= 0;
         }
       }
 
@@ -873,16 +974,22 @@ void loop() {
       int delta_pulse3= 0;
       //CLOSE VALVE
       digitalWrite(Close_MFC3, HIGH);
+      
     }
-
+/*
     v0.getValue(&pageVar);
 
-      if (pageVar == 10){
-        CurrentPage = 0;
-        p0.show();
-        pageVar=0;
-        delay(500);
-    }
+
+    if (pageVar == 10){
+     
+      CurrentPage = 0;
+      p0.show();
+      pageVar=0;
+      delay(500);
+        
+      }
+*/
+      
       /////////////////////////////////////////////////////////////////
      //////////////////// CHECKBOX 4 - MFC 4 /////////////////////////
     /////////////////////////////////////////////////////////////////
@@ -903,7 +1010,7 @@ void loop() {
         if(timer_enable4 == 0){
             n5.getValue(&timerMFC4);
             start_mfc4 = unix;
-            MFCset_value4 = MFCsetvalve(n7,numberu4);
+            
             timer_enable4 = 1;
           }
           
@@ -912,14 +1019,19 @@ void loop() {
           
           if(timerMFC4 >= delta4){
             digitalWrite(ledPin,HIGH);
-            MfcPwmON(PWM_INPUT4,delta4,buffer4,t18,MFCset_value4);
-            String message4 = TimeString + "," + String(MFCRead(MFC4,mfcOutputString,t14,t21,Calibrated_MFC_4)); //
+            MfcPwmON(PWM_INPUT4,delta4,buffer4,t18,n7);
+            MFC4_value = MFCRead(MFC4,mfcOutputString,t14,t21,Calibrated_MFC_4,mfcSCCM4);
+            String message4 = TimeString + "," + String(MFC4_value); //
             WriteSD(MFC_CSV_4,message4); 
           }
           else {
             digitalWrite(ledPin,LOW);
             MfcPwmOFF(PWM_INPUT4,c3);
             checkbox4 = 0;
+            timer_enable4 = 0;
+            delta4 = 0;
+            timer_enable_pulse4 = 0;
+            start_mfc4_pulse = 0;
           }
        }
       //////////////////// PULSE - MFC 4 /////////////////////////
@@ -940,7 +1052,6 @@ void loop() {
           cycle4_on=timerMFC4_pulse_on/float(total4);
           
           start_mfc4_pulse = unix;
-          MFCset_value4 = MFCsetvalve(n7,numberu4);
           timer_enable_pulse4 = 1;
           
         }
@@ -954,15 +1065,18 @@ void loop() {
             
             //OPEN VALVE
             digitalWrite(Close_MFC4, LOW);
-            MfcPwmON(PWM_INPUT4,delta4_pulse,buffer4,t18,MFCset_value4);
-            String message4 = TimeString + "," + String(MFCRead(MFC4,mfcOutputString,t14,t21,Calibrated_MFC_4)); //
+            MfcPwmON(PWM_INPUT4,delta4_pulse,buffer4,t18,n7);
+            MFC4_value = MFCRead(MFC4,mfcOutputString,t14,t21,Calibrated_MFC_4,mfcSCCM4);
+            String message4 = TimeString + "," + String(MFC4_value); //
             WriteSD(MFC_CSV_4,message4); 
           }
           else{
             
             //CLOSE VALVE
             digitalWrite(Close_MFC4, HIGH);
-            String message4 = TimeString + "," + String(MFCRead(MFC4,mfcOutputString,t14,t21,Calibrated_MFC_4)); //
+            MfcPwmClose(PWM_INPUT4,delta4_pulse,buffer4,t18);
+            MFC4_value = MFCRead(MFC4,mfcOutputString,t14,t21,Calibrated_MFC_4,mfcSCCM4);
+            String message4 = TimeString + "," + String(MFC4_value); 
             WriteSD(MFC_CSV_4,message4); 
           }
 
@@ -974,6 +1088,9 @@ void loop() {
           timer_enable_pulse4 = 0;
           start_mfc4_pulse = 0;
           digitalWrite(Close_MFC4, HIGH);
+          timer_enable4 = 0;
+          delta4 = 0;
+
         }
       }
 
@@ -991,10 +1108,11 @@ void loop() {
     ///// ESP 01 SEND MESSAGE 
     if (unix - ESP_TIMER >= ESP_DELAY){
       
-        ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)) + "," + String(MFCRead(MFC,mfcOutputString,t11,t8,Calibrated_MFC_1)) + "," + String(MFCRead(MFC2,mfcOutputString,t12,t19,Calibrated_MFC_2)) + "," + String(MFCRead(MFC3,mfcOutputString,t13,t20,Calibrated_MFC_3)) + "," + String(MFCRead(MFC4,mfcOutputString,t14,t21,Calibrated_MFC_4));
-        Serial.println(ESP_MESSAGE);
+        ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)) + "," + String(MFC1_value) + "," + String(MFC2_value) + "," + String(MFC3_value) + "," + String(MFC4_value);
+        Serial2.println(ESP_MESSAGE);
         ESP_TIMER = unix;
-    }
+        //delay(300);
+     }
 
     }
   
@@ -1027,11 +1145,45 @@ void loop() {
 
   if(CurrentPage == 2){
 
-    Calibrated_MFC_1 = ReadCalibrate(t1);
-    Calibrated_MFC_2 = ReadCalibrate(t2);
-    Calibrated_MFC_3 = ReadCalibrate(t3);
-    Calibrated_MFC_4 = ReadCalibrate(t4);
+    float tmfc1;
+    float tmfc2;
+    float tmfc3;
+    float tmfc4;
+
+  
+    if(ReadCalibrate(t1)>0){
+      Serial.println(ReadCalibrate(t1));
+      Calibrated_MFC_1 = ReadCalibrate(t1);
+      Serial.println(Calibrated_MFC_1);
+      Serial.println(Calibrated_MFC_1);
+
+    }
+    if(ReadCalibrate(t2)>0){
+      Calibrated_MFC_2 = ReadCalibrate(t2);
+    }
+    if(ReadCalibrate(t3)>0){
+      Calibrated_MFC_3 = ReadCalibrate(t3);
+    }
+    if(ReadCalibrate(t4)>0){
+      Calibrated_MFC_4 = ReadCalibrate(t4);
+    }
+
     
+
+    v0.getValue(&pageVar);
+
+    if (pageVar == 10){
+     
+      CurrentPage = 0;
+      p0.show();
+      pageVar=0;
+      delay(500);
+        
+    }
+
+    delay(200);
   }
 }
+
+
 
