@@ -97,10 +97,10 @@ int mcfOutput2 = 1 ;
 int mcfOutput3 = 1 ;
 int mcfOutput4 = 1 ;
 
-int mfcSCCM1 = 500 ;
-int mfcSCCM2 = 500 ;
-int mfcSCCM3 = 500 ;
-int mfcSCCM4 = 500 ;
+uint32_t mfcSCCM1 = 500 ;
+uint32_t mfcSCCM2 = 500 ;
+uint32_t mfcSCCM3 = 500 ;
+uint32_t mfcSCCM4 = 500 ;
 
 float Calibrated_MFC_1 = 1;
 float Calibrated_MFC_2 = 1;
@@ -132,9 +132,10 @@ NexDSButton bt4 = NexDSButton(2, 12, "bt0");
 NexDSButton bt5 = NexDSButton(2, 13, "bt1");
 NexDSButton bt6 = NexDSButton(2, 2, "bt6");
 NexDSButton bt7 = NexDSButton(2, 16, "bt7");
+NexDSButton bt8 = NexDSButton(2, 39, "bt8");
 NexDSButton bt9 = NexDSButton(2, 14, "bt4");
 NexDSButton bt10 = NexDSButton(2, 15, "bt5");
-NexDSButton bt8 = NexDSButton(2, 39, "bt8");
+NexDSButton bt11 = NexDSButton(1, 10, "bt0");
 NexText t1 = NexText(1, 2, "t0");
 NexText t2 = NexText(1, 3, "t1");
 NexText t3 = NexText(1, 4, "t2");
@@ -169,6 +170,10 @@ NexNumber n12 = NexNumber(2, 31, "n14");
 NexNumber n13 = NexNumber(2, 32, "n15");
 NexNumber n14 = NexNumber(2, 28, "n11");
 NexNumber n15 = NexNumber(2, 29, "n12");
+NexNumber n16 = NexNumber(1, 6, "n0");
+NexNumber n17 = NexNumber(1, 7, "n1");
+NexNumber n18 = NexNumber(1, 8, "n2");
+NexNumber n19 = NexNumber(1, 9, "n3");
 NexCheckbox c0 = NexCheckbox(2,6,"c0");
 NexCheckbox c1 = NexCheckbox(2,3,"c1"); 
 NexCheckbox c2 = NexCheckbox(2,8,"c2");
@@ -179,7 +184,7 @@ uint32_t pageVar=0;
 
 
 NexTouch *nex_listen_list[] = {
-  &v0,&p0,&p1,&p2,&p0_b1,&p0_b2,&p1_b0,&p2_b1,&p1_b2,&t1,&t2,&t3,&t4,&t8,&t19,&t20,&t21,&bt2,&bt3,&bt4,&bt5,&bt6,&bt7,&bt9,&bt10,&bt8,&c0,&c1,&c2,&c3,&n0,&n3,&n6,&n8,&n9,&n10,&n11,&n12,&n13,&n14,&n15, NULL
+  &v0,&p0,&p1,&p2,&p0_b1,&p0_b2,&p1_b0,&p2_b1,&p1_b2,&t1,&t2,&t3,&t4,&t8,&t19,&t20,&t21,&bt2,&bt3,&bt4,&bt5,&bt6,&bt7,&bt9,&bt10,&bt8,&bt11,&c0,&c1,&c2,&c3,&n0,&n3,&n6,&n8,&n9,&n10,&n11,&n12,&n13,&n14,&n15,&n16,&n17,&n18,&n19, NULL
 };
 
 uint32_t next, myInt = 0;
@@ -358,7 +363,7 @@ float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32
   
 } 
 
-float MFCRead(int MFC,char* mfcOutputString,NexText t,NexText t_out, float Calibrated_MFC,int mfcSCCM){
+float MFCRead(int MFC,char* mfcOutputString,NexText t,NexText t_out, float Calibrated_MFC,uint32_t mfcSCCM){
   float gas_factor_in;
   float output_MFC_factor;
   char bufferText[10];
@@ -1144,44 +1149,40 @@ v0.getValue(&pageVar);
   }
 
   if(CurrentPage == 2){
+    uint32_t applyButton_page2;
 
-    float tmfc1;
-    float tmfc2;
-    float tmfc3;
-    float tmfc4;
+    bt11.getValue(&applyButton_page2);
 
-  
-    if(ReadCalibrate(t1)>0){
-      Serial.println(ReadCalibrate(t1));
+    if(applyButton_page2==1){
+
       Calibrated_MFC_1 = ReadCalibrate(t1);
-      Serial.println(Calibrated_MFC_1);
-      Serial.println(Calibrated_MFC_1);
+      n16.getValue(&mfcSCCM1);
+      delay(60);
 
-    }
-    if(ReadCalibrate(t2)>0){
       Calibrated_MFC_2 = ReadCalibrate(t2);
-    }
-    if(ReadCalibrate(t3)>0){
-      Calibrated_MFC_3 = ReadCalibrate(t3);
-    }
-    if(ReadCalibrate(t4)>0){
-      Calibrated_MFC_4 = ReadCalibrate(t4);
-    }
+      n17.getValue(&mfcSCCM2);
+      delay(60);
 
-    
+      Calibrated_MFC_3 = ReadCalibrate(t3);
+      n18.getValue(&mfcSCCM3);
+      delay(60);
+
+      Calibrated_MFC_4 = ReadCalibrate(t4);
+      n19.getValue(&mfcSCCM4);
+      delay(60);
+      
+      bt11.setValue(0);
+    }
 
     v0.getValue(&pageVar);
 
     if (pageVar == 10){
-     
       CurrentPage = 0;
       p0.show();
       pageVar=0;
       delay(500);
-        
     }
 
-    delay(200);
   }
 }
 
