@@ -16,10 +16,11 @@ UnixTime stamp(-3);
 #include <SPI.h>
 #include <stdlib.h>
 
-#include "mcu_conf.h"
-#include "mfc_conf.h"
-#include "pirani_conf.h"
-#include "sdcard_conf.h"
+
+#include "./config/mcu_conf.h"
+#include "./config/mfc_conf.h"
+#include "./config/pirani_conf.h"
+#include "./config/sdcard_conf.h"
 #include "touch.h"
 
 #define ledPin 13

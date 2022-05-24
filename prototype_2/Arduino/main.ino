@@ -1,8 +1,7 @@
-
-#include "variables.h"
-#include "pirani.h"
-#include "mfc.h"
-#include "sdcard.h"
+#include "./lib/variables.h"
+#include "./lib/pirani.h"
+#include "./lib/mfc.h"
+#include "./lib/sdcard.h"
 
 
 char buffer[100] = {0};
