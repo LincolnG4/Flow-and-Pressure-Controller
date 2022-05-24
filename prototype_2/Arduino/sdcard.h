@@ -3,6 +3,7 @@
 
 #include "variables.h"
 
+
 void WriteSD(File myFile,String message){
   if (myFile) {
     Serial.print(String(myFile) + " Writing ...");

@@ -4,9 +4,12 @@
 #include "mfc.h"
 #include "sdcard.h"
 
-/////////////////////////////////////////////////////////////////
-//////////////////// FUNCTIONS /////////////////////////////////
-///////////////////////////////////////////////////////////////
+
+char buffer[100] = {0};
+char buffer2[100] = {0};
+char buffer3[100] = {0};
+char buffer4[100] = {0};
+
 
 float ReadCalibrate(NexText t_calibrate){
     float Text_Number;
@@ -18,7 +21,6 @@ float ReadCalibrate(NexText t_calibrate){
     Text_Number = atof(bufferCalibrate);
     return Text_Number;
 }
-
 
 
 void setup() {
@@ -53,7 +55,6 @@ void setup() {
   pinMode(Close_MFC2, OUTPUT);
   pinMode(Close_MFC3, OUTPUT);
   pinMode(Close_MFC4, OUTPUT);
- 
 
 
   digitalWrite(Close_MFC1, HIGH);
@@ -544,19 +545,7 @@ void loop() {
       digitalWrite(Close_MFC3, HIGH);
       
     }
-/*
-    v0.getValue(&pageVar);
 
-
-    if (pageVar == 10){
-     
-      CurrentPage = 0;
-      p0.show();
-      pageVar=0;
-      delay(500);
-        
-      }
-*/
       
       /////////////////////////////////////////////////////////////////
      //////////////////// CHECKBOX 4 - MFC 4 /////////////////////////

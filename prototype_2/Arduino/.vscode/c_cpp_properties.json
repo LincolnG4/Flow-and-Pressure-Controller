@@ -18,12 +18,12 @@
             "includePath": [
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\variants\\mega",
-                "D:\\OneDrive\\Documentos\\Arduino\\libraries\\ITEADLIB_Arduino_Nextion",
                 "D:\\OneDrive\\Documentos\\Arduino\\libraries\\ArduinoRTClibrary-master",
                 "D:\\OneDrive\\Documentos\\Arduino\\libraries\\Time",
                 "D:\\OneDrive\\Documentos\\Arduino\\libraries\\UnixTime-main\\src",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\SD\\src",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SPI\\src",
+                "D:\\OneDrive\\Documentos\\Arduino\\libraries\\ITEADLIB_Arduino_Nextion",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SoftwareSerial\\src",
                 "c:\\program files (x86)\\arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include",
                 "c:\\program files (x86)\\arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include-fixed",
