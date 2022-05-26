@@ -4,7 +4,8 @@
 #include "variables.h"
 
 
-float MFCRead(int MFC,char* mfcOutputString,NexText t,NexText t_out, float Calibrated_MFC,uint32_t mfcSCCM){
+float MFCRead(int MFC,NexText t,NexText t_out, float Calibrated_MFC,uint32_t mfcSCCM){
+  char mfcOutputString[10];
   float gas_factor_in;
   float output_MFC_factor;
   char bufferText[10];
@@ -27,7 +28,8 @@ float MFCRead(int MFC,char* mfcOutputString,NexText t,NexText t_out, float Calib
 
 
 
-void MfcPwmON(int PWM_INPUT,int delta,char* buffer,NexText t,NexNumber n){
+void MfcPwmON(int PWM_INPUT,int delta,NexText t,NexNumber n){
+  char buffer[100] = {0};
   uint32_t val;
 
   n.getValue(&val);
@@ -41,12 +43,12 @@ void MfcPwmON(int PWM_INPUT,int delta,char* buffer,NexText t,NexNumber n){
   t.setText(buffer);
 }
 
-void MfcPwmClose(int PWM_INPUT,int delta,char* buffer,NexText t){
-
+void MfcPwmClose(int PWM_INPUT,int delta,NexText t){
+  char bufferclose[100] = {0};
   analogWrite(PWM_INPUT, 0);
   
-  itoa(delta,buffer, 10);
-  t.setText(buffer);
+  itoa(delta,bufferclose, 10);
+  t.setText(bufferclose);
 }
 
 void MfcPwmOFF(int PWM_INPUT,NexCheckbox c){
