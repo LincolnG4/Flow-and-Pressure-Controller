@@ -189,497 +189,439 @@ void loop() {
 
       if(checkbox1 == 1 || checkbox2 == 1 || checkbox3 == 1 || checkbox4 == 1  ){
 
-      float MFC1_value;
-      float MFC2_value;
-      float MFC3_value;
-      float MFC4_value;
+        float MFC1_value;
+        float MFC2_value;
+        float MFC3_value;
+        float MFC4_value;
 
-      // MFC 1
-      if(checkbox1){
-        
-        bt2.getValue(&MFC1_mode_linear); // Linear Function ON/OFF
-        bt6.getValue(&MFC1_mode_pulse); // Pulse Function ON/OFF
-        
-        /*
-        * MFC - Linear
-        * This 'If' starts the Linear function that controls the valve with constant value for a period of time.
-        * During the ON period, it saves all measure into a CSV file in micro SDcard 
-        */
-        if(MFC1_mode_linear==1 && MFC1_mode_pulse==0){
-          digitalWrite(Close_MFC1, LOW); // Open valve
-
-          MFC_CSV_1 = SD.open("MFC1.csv", FILE_WRITE); //Create a CSV file
-
-          if(timer_enable == 0){
-            n1.getValue(&timerMFC1); // Get time to be Open&Running
-            start_mfc1 = unix; // Get time start reference
-            timer_enable = 1; 
-            //Serial.println("[INFO] - MFC1 - Timer set  = " + String(timerMFC1) );
-          }
+        // MFC 1
+        if(checkbox1){
+          bt2.getValue(&MFC1_mode_linear); // Linear Function ON/OFF
+          bt6.getValue(&MFC1_mode_pulse); // Pulse Function ON/OFF
           
-          delta = unix - start_mfc1; 
+          /*
+          * MFC - Linear
+          * This 'If' starts the Linear function that controls the valve with constant value for a period of time.
+          * During the ON period, it saves all measure into a CSV file in micro SDcard 
+          */
+          if(MFC1_mode_linear==1 && MFC1_mode_pulse==0){
 
-          if(timerMFC1 >= delta){
-            MfcPwmON(PWM_INPUT1,delta,t15,n0,mfcSCCM1);
-            MFC1_value = MFCRead(MFC,t11,t8,Calibrated_MFC_1,mfcSCCM1);
-            String message1 = TimeString + "," + String(MFC1_value); 
-            WriteSD(MFC_CSV_1,message1);
-            //Serial.println("[INFO] - MFC1 - Measure = " + message1 );
-          }
-          else {
-            MfcPwmClose(PWM_INPUT1,delta_pulse,t15,Close_MFC1);
-            digitalWrite(Close_MFC1, HIGH);
-            checkbox1 = 0;
-            //Serial.println("[INFO] - MFC1 - Turned OFF");
-          }
+            MFC_CSV_1 = SD.open("MFC1.csv", FILE_WRITE); //Create a CSV file
 
-        }
-        
-        /*
-        * MFC - Pulse
-        * This 'If' starts the Pulse function that controls the valve switching from ON and OFF.
-        * During the ON/OFF period, it saves all measure into a CSV file in micro SDcard 
-        */
-        if(MFC1_mode_pulse==1 && MFC1_mode_linear==0){
-          
-          //OPEN VALVE
-          digitalWrite(Close_MFC1, LOW);
-
-          //CREATE SAVE A SD CARD
-          MFC_CSV_1 = SD.open("MFC1.csv", FILE_WRITE);
-
-          if(timer_enable_pulse == 0){
-            n1.getValue(&timerMFC1_pulse);
-            n8.getValue(&timerMFC1_pulse_on); // Get time to open pulse
-            n9.getValue(&timerMFC1_pulse_off); // Get time to close pulse
-            total1=timerMFC1_pulse_on+timerMFC1_pulse_off; 
-            cycle_on=timerMFC1_pulse_on/float(total1);
-            start_mfc1_pulse = unix;
-            timer_enable_pulse = 1;
-            //Serial.println("[INFO] - MFC1 - Turned ON");
-          }
-          
-          delta_pulse = unix - start_mfc1_pulse;
-          
-
-          if(timerMFC1_pulse > delta_pulse){
-            
-            
-            if( ((delta_pulse%total1)/float(total1)) < cycle_on ){ // open pulse
-              //OPEN VALVE
-              digitalWrite(Close_MFC1, LOW);
-              MfcPwmON(PWM_INPUT1,delta_pulse,t15,n0,mfcSCCM1);
-              MFC1_value = MFCRead(MFC,t11,t8,Calibrated_MFC_1,mfcSCCM1);
-              String message1 = TimeString + "," + String(MFC1_value); //
-              WriteSD(MFC_CSV_1,message1);
+            if(timer_enable == 0){
+              n1.getValue(&timerMFC1); // Get time to be Open&Running
+              start_mfc1 = unix; // Get time start reference
+              timer_enable = 1; 
+              //Serial.println("[INFO] - MFC1 - Timer set  = " + String(timerMFC1) );
             }
-            else{ // close pulse
-              //CLOSE VALVE
-              digitalWrite(Close_MFC1, HIGH);
+            
+            delta = unix - start_mfc1; 
+
+            if(timerMFC1 >= delta){
+              digitalWrite(Close_MFC1, LOW); // Open valve
+              MfcPwmON(PWM_INPUT1,delta,t15,n0,mfcSCCM1);
+              MFC1_value = MFCRead(MFC,t11,t8,Calibrated_MFC_1,mfcSCCM1);
+              String message1 = TimeString + "," + String(MFC1_value); 
+              WriteSD(MFC_CSV_1,message1);
+              //Serial.println("[INFO] - MFC1 - Measure = " + message1 );
+            }
+            else {
               MfcPwmClose(PWM_INPUT1,delta_pulse,t15,Close_MFC1);
-              MFC1_value = MFCRead(MFC,t11,t8,Calibrated_MFC_1,mfcSCCM1);
-              String message1 = TimeString + "," + String(MFC1_value); //
-              WriteSD(MFC_CSV_1,message1);
+              c0.setValue(0);
+              checkbox1 = 0;
+              timer_enable = 0;
+              int delta = 0;
+              //Serial.println("[INFO] - MFC1 - Turned OFF");
             }
+          }
+          
+          /*
+          * MFC - Pulse
+          * This 'If' starts the Pulse function that controls the valve switching from ON and OFF.
+          * During the ON/OFF period, it saves all measure into a CSV file in micro SDcard 
+          */
+          if(MFC1_mode_pulse==1 && MFC1_mode_linear==0){
 
+            //CREATE SAVE A SD CARD
+            MFC_CSV_1 = SD.open("MFC1.csv", FILE_WRITE);
+
+            if(timer_enable_pulse == 0){
+              n1.getValue(&timerMFC1_pulse);
+              n8.getValue(&timerMFC1_pulse_on); // Get time to open pulse
+              n9.getValue(&timerMFC1_pulse_off); // Get time to close pulse
+              total1=timerMFC1_pulse_on+timerMFC1_pulse_off; 
+              cycle_on=timerMFC1_pulse_on/float(total1);
+              start_mfc1_pulse = unix;
+              timer_enable_pulse = 1;
+              //Serial.println("[INFO] - MFC1 - Turned ON");
+            }
+            
+            delta_pulse = unix - start_mfc1_pulse;
+            
+
+            if(timerMFC1_pulse > delta_pulse){
+              if( ((delta_pulse%total1)/float(total1)) < cycle_on ){ // open pulse
+                digitalWrite(Close_MFC1, LOW);  //OPEN VALVE
+                MfcPwmON(PWM_INPUT1,delta_pulse,t15,n0,mfcSCCM1);
+                MFC1_value = MFCRead(MFC,t11,t8,Calibrated_MFC_1,mfcSCCM1);
+                String message1 = TimeString + "," + String(MFC1_value); //
+                WriteSD(MFC_CSV_1,message1);
+              }
+              else{ // close pulse
+                MfcPwmClose(PWM_INPUT1,delta_pulse,t15,Close_MFC1);
+                MFC1_value = MFCRead(MFC,t11,t8,Calibrated_MFC_1,mfcSCCM1);
+                String message1 = TimeString + "," + String(MFC1_value); //
+                WriteSD(MFC_CSV_1,message1);
+              }
+
+            }
+            else {
+              MfcPwmClose(PWM_INPUT1,delta_pulse,t15,Close_MFC1);
+              c0.setValue(0);
+              checkbox1 = 0;
+              delta_pulse= 0;
+              timer_enable_pulse = 0;
+            }
+          }
+        }
+        else {
+          MfcPwmClose(PWM_INPUT1,delta_pulse,t15,Close_MFC1);
+          timer_enable = 0;
+          timer_enable_pulse = 0;
+          delta=0;
+          delta_pulse= 0;
+          int delta = 0;
+          int delta_pulse= 0;
+        }
+
+      // CHECKBOX 2 - MFC 2 
+      if(checkbox2){
+        bt3.getValue(&MFC2_mode_linear);
+        bt7.getValue(&MFC2_mode_pulse);
+
+        // LINEAR - MFC 2 
+        if(MFC2_mode_linear==1 && MFC2_mode_pulse==0){    
+            digitalWrite(Close_MFC2, LOW); //OPEN VALVE
+
+            //CREATE SAVE A SD CARD
+            MFC_CSV_2 = SD.open("MFC2.csv", FILE_WRITE);
+
+            if(timer_enable2 == 0){
+              n2.getValue(&timerMFC2);
+              start_mfc2 = unix;
+              timer_enable2 = 1;
+              //Serial.println("[INFO] - MFC2 - Timer set  = " + String(timerMFC2) );
+            }
+            
+            delta2 = unix - start_mfc2; 
+
+            if(timerMFC2 >= delta2){
+              MfcPwmON(PWM_INPUT2,delta2,t16,n3,mfcSCCM2); 
+              MFC2_value = MFCRead(MFC2,t12,t19,Calibrated_MFC_2,mfcSCCM2);
+              String message2 = TimeString + "," + String(MFC2_value); 
+              WriteSD(MFC_CSV_2,message2);
+              //Serial.println("[INFO] - MFC2 - Measure = " + message2 ); 
+            }
+            else {
+              MfcPwmClose(PWM_INPUT2,delta2_pulse,t16,Close_MFC2); 
+              c1.setValue(0);
+              checkbox2 = 0;
+              timer_enable2 = 0;
+              int delta2 = 0;
+              //Serial.println("[INFO] - MFC2 - Turned OFF");
+            }  
+        } 
+
+        // PULSE - MFC 2
+        if(MFC2_mode_pulse==1 && MFC2_mode_linear==0){
+          digitalWrite(Close_MFC2, LOW);//OPEN VALVE
+
+          MFC_CSV_2 = SD.open("MFC2.csv", FILE_WRITE);
+
+          if(timer_enable_pulse2 == 0){
+            n2.getValue(&timerMFC2_pulse);
+            n10.getValue(&timerMFC2_pulse_on);
+            n11.getValue(&timerMFC2_pulse_off);
+            total2=timerMFC2_pulse_on+timerMFC2_pulse_off;
+            cycle2_on=timerMFC2_pulse_on/float(total2);
+            start_mfc2_pulse = unix;
+            timer_enable_pulse2 = 1;
           }
           
+          delta2_pulse = unix - start_mfc2_pulse;
+          
+          if(timerMFC2_pulse > delta2_pulse){
+            if(((delta2_pulse%total2)/float(total2)) < cycle2_on ){
+              digitalWrite(Close_MFC2, LOW);
+              MfcPwmON(PWM_INPUT2,delta2_pulse,t16,n3,mfcSCCM2); 
+              MFC2_value = MFCRead(MFC2,t12,t19,Calibrated_MFC_2,mfcSCCM2);
+              String message2 = TimeString + "," + String(MFC2_value);
+              WriteSD(MFC_CSV_2,message2); 
+            }
+            else{
+              MfcPwmClose(PWM_INPUT2,delta2_pulse,t16,Close_MFC2);  
+              MFC2_value = MFCRead(MFC2,t12,t19,Calibrated_MFC_2,mfcSCCM2);
+              String message2 = TimeString + "," + String(MFC2_value); 
+              WriteSD(MFC_CSV_2,message2); 
+            }
+          }
           else {
-            MfcPwmClose(PWM_INPUT1,delta_pulse,t15,Close_MFC1);
-            checkbox1 = 0;
-            delta=0;
-            delta_pulse= 0;
-            timer_enable = 0;
-            timer_enable_pulse = 0;
+            MfcPwmClose(PWM_INPUT2,delta2_pulse,t16,Close_MFC2);
+            c1.setValue(0);
+            checkbox2 = 0;
+            timer_enable_pulse2 = 0;
+            int delta_pulse2= 0;
           }
-          
         }
       }
       else {
-        timer_enable = 0;
-        timer_enable_pulse = 0;
-        delta=0;
-        delta_pulse= 0;
-        int delta = 0;
-        int delta_pulse= 0;
-        MfcPwmClose(PWM_INPUT1,delta_pulse,t15,Close_MFC1);
-        t16.setText("0");
+        MfcPwmClose(PWM_INPUT2,delta2_pulse,t16,Close_MFC2);
+        timer_enable2 = 0;
+        timer_enable_pulse2 = 0;
+        int delta2 = 0;
+        int delta_pulse2= 0;
       }
 
+      // CHECKBOX 3 - MFC 3 
+      if(checkbox3){
+        bt4.getValue(&MFC3_mode_linear);
+        bt9.getValue(&MFC3_mode_pulse);
 
-      
-     // CHECKBOX 2 - MFC 2 
+        //LINEAR - MFC 3 
+        if(MFC3_mode_linear==1 && MFC3_mode_pulse==0){
+          digitalWrite(Close_MFC3, LOW); //OPEN VALVE
 
-    if(checkbox2){
-      bt3.getValue(&MFC2_mode_linear);
-      bt7.getValue(&MFC2_mode_pulse);
+          MFC_CSV_3 = SD.open("MFC3.csv", FILE_WRITE); //CREATE SAVE A SD CARD
 
-      // LINEAR - MFC 2 
-      if(MFC2_mode_linear==1 && MFC2_mode_pulse==0){
-
-          //OPEN VALVE
-          digitalWrite(Close_MFC2, LOW);
-
-          //CREATE SAVE A SD CARD
-          MFC_CSV_2 = SD.open("MFC2.csv", FILE_WRITE);
-
-          if(timer_enable2 == 0){
-            //MFC_CSV_2 = SD.open("MFC2.csv", FILE_WRITE);
-            n2.getValue(&timerMFC2);
-            start_mfc2 = unix;
-            timer_enable2 = 1;
-            
+          if(timer_enable3 == 0){
+            n4.getValue(&timerMFC3);
+            start_mfc3 = unix;
+            timer_enable3 = 1;
+            //Serial.println("[INFO] - MFC3 - Timer set  = " + String(timerMFC3) );
           }
-          // unsigned long currentMillis = millis()/1000;
-          delta2 = unix - start_mfc2; 
-
-          if(timerMFC2 >= delta2){
-            
-            MfcPwmON(PWM_INPUT2,delta2,t16,n3,mfcSCCM2); 
-            MFC2_value = MFCRead(MFC2,t12,t19,Calibrated_MFC_2,mfcSCCM2);
-            String message2 = TimeString + "," + String(MFC2_value); 
-            WriteSD(MFC_CSV_2,message2); 
-          }
-          else {
-            MfcPwmClose(PWM_INPUT2,delta2_pulse,t16,Close_MFC2); 
-            
-            checkbox2 = 0;
-            timer_enable2 = 0;
-            int delta2 = 0;
-            timer_enable_pulse2 = 0;
-            
-            int delta_pulse2= 0;
-            
-          }  
-        } 
-
-      // PULSE - MFC 2
-      if(MFC2_mode_pulse==1 && MFC2_mode_linear==0){
-      
-        //OPEN VALVE
-        digitalWrite(Close_MFC2, LOW);
-
-        //CREATE SAVE A SD CARD
-        MFC_CSV_2 = SD.open("MFC2.csv", FILE_WRITE);
-
-        if(timer_enable_pulse2 == 0){
-          n2.getValue(&timerMFC2_pulse);
-          n10.getValue(&timerMFC2_pulse_on);
-          n11.getValue(&timerMFC2_pulse_off);
-          total2=timerMFC2_pulse_on+timerMFC2_pulse_off;
-
           
-          cycle2_on=timerMFC2_pulse_on/float(total2);
+          delta3 = unix - start_mfc3;
           
-          start_mfc2_pulse = unix;
-          timer_enable_pulse2 = 1;
-          
-        }
-        
-        delta2_pulse = unix - start_mfc2_pulse;
-        
-
-        if(timerMFC2_pulse > delta2_pulse){
-
-          if( ((delta2_pulse%total2)/float(total2)) < cycle2_on ){
-            
-            //OPEN VALVE
-            digitalWrite(Close_MFC2, LOW);
-            MfcPwmON(PWM_INPUT2,delta2_pulse,t16,n3,mfcSCCM2); 
-            MFC2_value = MFCRead(MFC2,t12,t19,Calibrated_MFC_2,mfcSCCM2);
-            String message2 = TimeString + "," + String(MFC2_value);
-            WriteSD(MFC_CSV_2,message2); 
-          }
-          else{
-            
-            //CLOSE VALVE
-            digitalWrite(Close_MFC2, HIGH);
-            MfcPwmClose(PWM_INPUT2,delta2_pulse,t16,Close_MFC2);  
-            MFC2_value = MFCRead(MFC2,t12,t19,Calibrated_MFC_2,mfcSCCM2);
-            String message2 = TimeString + "," + String(MFC2_value); 
-            WriteSD(MFC_CSV_2,message2); 
-          }
-
-        }
-        else {
-          MfcPwmClose(PWM_INPUT2,delta2_pulse,t16,Close_MFC2);
-          
-          checkbox2 = 0;
-          timer_enable2 = 0;
-          int delta2 = 0;
-          timer_enable_pulse2 = 0;
-          
-          int delta_pulse2= 0;
-        }
-      }
-
-
-
-    }
-    else {
-      timer_enable2 = 0;
-      int delta2 = 0;
-      timer_enable_pulse2 = 0;
-      
-      int delta_pulse2= 0;
-      //CLOSE VALVE
-      digitalWrite(Close_MFC2, HIGH);
-    }
-
-
-      
-     // CHECKBOX 3 - MFC 3 
-    if(checkbox3){
-      
-      bt4.getValue(&MFC3_mode_linear);
-      bt9.getValue(&MFC3_mode_pulse);
-
-      //LINEAR - MFC 3 
-      if(MFC3_mode_linear==1 && MFC3_mode_pulse==0){
-    
-        //OPEN VALVE
-        digitalWrite(Close_MFC3, LOW);
-
-        //CREATE SAVE A SD CARD
-        MFC_CSV_3 = SD.open("MFC3.csv", FILE_WRITE);
-
-        if(timer_enable3 == 0){
-          n4.getValue(&timerMFC3);
-          start_mfc3 = unix;
-          timer_enable3 = 1;
-          
-        }
-        
-        // unsigned long currentMillis = millis()/1000;
-        delta3 = unix - start_mfc3;
-        
-        if(timerMFC3 >= delta3){
-         
-          MfcPwmON(PWM_INPUT3,delta3,t17,n6,mfcSCCM3);
-          MFC3_value = MFCRead(MFC3,t13,t20,Calibrated_MFC_3,mfcSCCM3);
-          String message3 = TimeString + "," + String(MFC3_value); //
-          WriteSD(MFC_CSV_3,message3); 
-        }
-        else {
-          
-          MfcPwmClose(PWM_INPUT3,delta3_pulse,t17,Close_MFC3);
-          checkbox3 = 0;
-          timer_enable3 = 0;
-          int delta3 = 0;
-          timer_enable_pulse3 = 0;
-          int delta_pulse3= 0;
-        }
-      }
-
-      // PULSE - MFC 3 
-      if(MFC3_mode_pulse==1 && MFC3_mode_linear==0){
-      
-        //OPEN VALVE
-        digitalWrite(Close_MFC3, LOW);
-
-        //CREATE SAVE A SD CARD
-        MFC_CSV_3 = SD.open("MFC3.csv", FILE_WRITE);
-
-        if(timer_enable_pulse3 == 0){
-          n4.getValue(&timerMFC3_pulse);
-          n12.getValue(&timerMFC3_pulse_on);
-          n13.getValue(&timerMFC3_pulse_off);
-          total3=timerMFC3_pulse_on+timerMFC3_pulse_off;
-
-          cycle3_on=timerMFC3_pulse_on/float(total3);
-          
-          start_mfc3_pulse = unix;
-          timer_enable_pulse3= 1;
-          
-        }
-        
-        delta3_pulse = unix - start_mfc3_pulse;
-        
-
-        if(timerMFC3_pulse > delta3_pulse){
-
-          if( ((delta3_pulse%total3)/float(total3)) < cycle3_on ){
-           
-            //OPEN VALVE
-            digitalWrite(Close_MFC3, LOW);
-            MfcPwmON(PWM_INPUT3,delta3_pulse,t17,n6,mfcSCCM3); 
+          if(timerMFC3 >= delta3){
+            digitalWrite(Close_MFC3, LOW); //OPEN VALVE
+            MfcPwmON(PWM_INPUT3,delta3,t17,n6,mfcSCCM3);
             MFC3_value = MFCRead(MFC3,t13,t20,Calibrated_MFC_3,mfcSCCM3);
             String message3 = TimeString + "," + String(MFC3_value); //
             WriteSD(MFC_CSV_3,message3); 
+            //Serial.println("[INFO] - MFC3 - Measure = " + message3 );
           }
-          else{
-        
-            //CLOSE VALVE
-            digitalWrite(Close_MFC3, HIGH); 
+          else {
             MfcPwmClose(PWM_INPUT3,delta3_pulse,t17,Close_MFC3);
-            MFC3_value = MFCRead(MFC3,t13,t20,Calibrated_MFC_3,mfcSCCM3);
-            String message3 = TimeString + "," + String(MFC3_value); //
-            WriteSD(MFC_CSV_3,message3);  
+            c2.setValue(0);
+            checkbox3 = 0;
+            timer_enable3 = 0;
+            int delta3 = 0;
+            //Serial.println("[INFO] - MFC3 - Turned OFF");
           }
-
         }
-        else {
-          MfcPwmClose(PWM_INPUT3,delta3_pulse,t17,Close_MFC3);
+
+        // PULSE - MFC 3 
+        if(MFC3_mode_pulse==1 && MFC3_mode_linear==0){
+          digitalWrite(Close_MFC3, LOW); //OPEN VALVE
+
+          MFC_CSV_3 = SD.open("MFC3.csv", FILE_WRITE); //CREATE SAVE A SD CARD
+
+          if(timer_enable_pulse3 == 0){
+            n4.getValue(&timerMFC3_pulse);
+            n12.getValue(&timerMFC3_pulse_on);
+            n13.getValue(&timerMFC3_pulse_off);
+            total3=timerMFC3_pulse_on+timerMFC3_pulse_off;
+
+            cycle3_on=timerMFC3_pulse_on/float(total3);
+            
+            start_mfc3_pulse = unix;
+            timer_enable_pulse3= 1;
+          }
           
-          checkbox3 = 0;
-          timer_enable3 = 0;
-          int delta3 = 0;
-          timer_enable_pulse3 = 0;
-          int delta_pulse3= 0;
+          delta3_pulse = unix - start_mfc3_pulse;
+          
+          if(timerMFC3_pulse > delta3_pulse){
+            if( ((delta3_pulse%total3)/float(total3)) < cycle3_on ){
+              digitalWrite(Close_MFC3, LOW); //OPEN VALVE
+              MfcPwmON(PWM_INPUT3,delta3_pulse,t17,n6,mfcSCCM3); 
+              MFC3_value = MFCRead(MFC3,t13,t20,Calibrated_MFC_3,mfcSCCM3);
+              String message3 = TimeString + "," + String(MFC3_value); //
+              WriteSD(MFC_CSV_3,message3); 
+            }
+            else{
+              MfcPwmClose(PWM_INPUT3,delta3_pulse,t17,Close_MFC3);
+              MFC3_value = MFCRead(MFC3,t13,t20,Calibrated_MFC_3,mfcSCCM3);
+              String message3 = TimeString + "," + String(MFC3_value); //
+              WriteSD(MFC_CSV_3,message3);  
+            }
+          }
+          else {
+            MfcPwmClose(PWM_INPUT3,delta3_pulse,t17,Close_MFC3);
+            c2.setValue(0);
+            checkbox3 = 0;
+            timer_enable_pulse3 = 0;
+            int delta_pulse3= 0;
+          }
         }
       }
+      else {
+        MfcPwmClose(PWM_INPUT3,delta3_pulse,t17,Close_MFC3);
+        timer_enable3 = 0;
+        timer_enable_pulse3 = 0;
+        int delta3 = 0;   
+        int delta_pulse3= 0;
+      }
 
-    }
-    else {
-      timer_enable3 = 0;
-      int delta3 = 0;
-      timer_enable_pulse3 = 0;
-      int delta_pulse3= 0;
-      //CLOSE VALVE
-      digitalWrite(Close_MFC3, HIGH);
-      
-    }
+      // CHECKBOX 4 - MFC 4
+      if(checkbox4){
+          bt5.getValue(&MFC4_mode_linear);
+          bt10.getValue(&MFC4_mode_pulse);
 
-      
-    // CHECKBOX 4 - MFC 4
-    
-     if(checkbox4){
-        bt5.getValue(&MFC4_mode_linear);
-        bt10.getValue(&MFC4_mode_pulse);
-       
-
-       // LINEAR - MFC 4
-       if(MFC4_mode_linear==1 && MFC4_mode_pulse==0){
-        //OPEN VALVE
-          digitalWrite(Close_MFC4, LOW);
-        //CREATE SAVE A SD CARD
+        // LINEAR - MFC 4
+        if(MFC4_mode_linear==1 && MFC4_mode_pulse==0){
+          digitalWrite(Close_MFC4, LOW); //OPEN VALVE
+          //CREATE SAVE A SD CARD
           MFC_CSV_4 = SD.open("MFC4.csv", FILE_WRITE);
+              
+          if(timer_enable4 == 0){
+              n5.getValue(&timerMFC4);
+              start_mfc4 = unix;
+              timer_enable4 = 1;
+              //Serial.println("[INFO] - MFC4 - Timer set  = " + String(timerMFC4) );
+            }
             
-        if(timer_enable4 == 0){
-            n5.getValue(&timerMFC4);
-            start_mfc4 = unix;
-            
-            timer_enable4 = 1;
-          }
-          
-          // unsigned long currentMillis = millis()/1000;
           delta4 = unix - start_mfc4;
-          
+            
           if(timerMFC4 >= delta4){
-            digitalWrite(ledPin,HIGH);
             MfcPwmON(PWM_INPUT4,delta4,t18,n7,mfcSCCM4);
             MFC4_value = MFCRead(MFC4,t14,t21,Calibrated_MFC_4,mfcSCCM4);
             String message4 = TimeString + "," + String(MFC4_value); //
             WriteSD(MFC_CSV_4,message4); 
+            //Serial.println("[INFO] - MFC4 - Measure = " + message4 );
           }
           else {
-            digitalWrite(ledPin,LOW);
             MfcPwmClose(PWM_INPUT4,delta4_pulse,t18,Close_MFC4);
+            c3.setValue(0);
             checkbox4 = 0;
             timer_enable4 = 0;
             delta4 = 0;
+          }
+        }
+        //PULSE - MFC 4 
+        if(MFC4_mode_pulse==1 && MFC4_mode_linear==0){
+          digitalWrite(Close_MFC4, LOW);//OPEN VALVE
+
+          MFC_CSV_4 = SD.open("MFC4.csv", FILE_WRITE); //CREATE SAVE A SD CARD
+
+          if(timer_enable_pulse4 == 0){
+            n5.getValue(&timerMFC4_pulse);
+            n14.getValue(&timerMFC4_pulse_on);
+            n15.getValue(&timerMFC4_pulse_off);
+            total4=timerMFC4_pulse_on+timerMFC4_pulse_off;
+
+            cycle4_on=timerMFC4_pulse_on/float(total4);
+            
+            start_mfc4_pulse = unix;
+            timer_enable_pulse4 = 1;
+          }
+          
+          delta4_pulse = unix - start_mfc4_pulse;
+
+          if(timerMFC4_pulse > delta4_pulse){
+            if( ((delta4_pulse%total4)/float(total4)) < cycle4_on ){
+              digitalWrite(Close_MFC4, LOW); //OPEN VALVE
+              MfcPwmON(PWM_INPUT4,delta4_pulse,t18,n7,mfcSCCM4);
+              MFC4_value = MFCRead(MFC4,t14,t21,Calibrated_MFC_4,mfcSCCM4);
+              String message4 = TimeString + "," + String(MFC4_value); //
+              WriteSD(MFC_CSV_4,message4); 
+            }
+            else{
+              MfcPwmClose(PWM_INPUT4,delta4_pulse,t18,Close_MFC4);
+              MFC4_value = MFCRead(MFC4,t14,t21,Calibrated_MFC_4,mfcSCCM4);
+              String message4 = TimeString + "," + String(MFC4_value); 
+              WriteSD(MFC_CSV_4,message4); 
+            }
+          }
+          else {
+            MfcPwmClose(PWM_INPUT4,delta4_pulse,t18,Close_MFC4);
+            c3.setValue(0);
+            checkbox4 = 0;
             timer_enable_pulse4 = 0;
             start_mfc4_pulse = 0;
           }
-       }
-      //PULSE - MFC 4 
-      if(MFC4_mode_pulse==1 && MFC4_mode_linear==0){
-      
-        //OPEN VALVE
-        digitalWrite(Close_MFC4, LOW);
-
-        //CREATE SAVE A SD CARD
-        MFC_CSV_4 = SD.open("MFC4.csv", FILE_WRITE);
-
-        if(timer_enable_pulse4 == 0){
-          n5.getValue(&timerMFC4_pulse);
-          n14.getValue(&timerMFC4_pulse_on);
-          n15.getValue(&timerMFC4_pulse_off);
-          total4=timerMFC4_pulse_on+timerMFC4_pulse_off;
-
-          cycle4_on=timerMFC4_pulse_on/float(total4);
-          
-          start_mfc4_pulse = unix;
-          timer_enable_pulse4 = 1;
-          
         }
-        
-        delta4_pulse = unix - start_mfc4_pulse;
-        
-
-        if(timerMFC4_pulse > delta4_pulse){
-
-          if( ((delta4_pulse%total4)/float(total4)) < cycle4_on ){
-            
-            //OPEN VALVE
-            digitalWrite(Close_MFC4, LOW);
-            MfcPwmON(PWM_INPUT4,delta4_pulse,t18,n7,mfcSCCM4);
-            MFC4_value = MFCRead(MFC4,t14,t21,Calibrated_MFC_4,mfcSCCM4);
-            String message4 = TimeString + "," + String(MFC4_value); //
-            WriteSD(MFC_CSV_4,message4); 
-          }
-          else{
-            
-            //CLOSE VALVE
-            digitalWrite(Close_MFC4, HIGH);
-            MfcPwmClose(PWM_INPUT4,delta4_pulse,t18,Close_MFC4);
-            MFC4_value = MFCRead(MFC4,t14,t21,Calibrated_MFC_4,mfcSCCM4);
-            String message4 = TimeString + "," + String(MFC4_value); 
-            WriteSD(MFC_CSV_4,message4); 
-          }
-
-        }
-        else {
-          MfcPwmClose(PWM_INPUT4,delta4_pulse,t18,Close_MFC4);
-       
-          checkbox4 = 0;
-          timer_enable_pulse4 = 0;
-          start_mfc4_pulse = 0;
-          digitalWrite(Close_MFC4, HIGH);
-          timer_enable4 = 0;
-          delta4 = 0;
-
-        }
-      }
-
       }
       else {
+        MfcPwmClose(PWM_INPUT4,delta4_pulse,t18,Close_MFC4);
         timer_enable4 = 0;
-        delta4 = 0;
         timer_enable_pulse4 = 0;
+        delta4 = 0; 
+        delta4_pulse= 0;
         start_mfc4_pulse = 0;
-        //CLOSE VALVE
-        digitalWrite(Close_MFC4, HIGH);
       }  
 
-  
-    // ESP 01 SEND MESSAGE 
-    if (unix - ESP_TIMER >= ESP_DELAY){
-        ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)) + "," + String(MFC1_value) + "," + String(MFC2_value) + "," + String(MFC3_value) + "," + String(MFC4_value);
-        Serial2.println(ESP_MESSAGE);
-        ESP_TIMER = unix; // ESP time reference
-        //delay(300);
+      // ESP 01 SEND MESSAGE 
+      if (unix - ESP_TIMER >= ESP_DELAY){
+          ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)) + "," + String(MFC1_value) + "," + String(MFC2_value) + "," + String(MFC3_value) + "," + String(MFC4_value);
+          Serial2.println(ESP_MESSAGE);
+          ESP_TIMER = unix; // ESP time reference
+          //delay(300);
+      }
     }
-    
+    else{
+      timer_enable = 0;
+      timer_enable_pulse = 0;
+      checkbox1 = 0;
+      delta=0;
+      delta_pulse= 0;
+      digitalWrite(Close_MFC1, HIGH); //CLOSE VALVE
+
+      timer_enable2 = 0;
+      timer_enable_pulse2 = 0;
+      checkbox2 = 0;
+      delta2=0;
+      delta2_pulse= 0;
+      digitalWrite(Close_MFC2, HIGH);
+
+      timer_enable3 = 0;
+      timer_enable_pulse3 = 0;
+      checkbox3 = 0;
+      delta3=0;
+      delta3_pulse= 0;
+      digitalWrite(Close_MFC3, HIGH);
+
+      timer_enable4 = 0;
+      timer_enable_pulse4 = 0;
+      checkbox4 = 0; 
+      delta4=0;
+      delta4_pulse= 0;
+      digitalWrite(Close_MFC4, HIGH);
     }
-  } 
+  }  
   else{
-    
     checkbox1 = 0;
+    timer_enable = 0;
+    timer_enable_pulse = 0;
     delta=0;
     delta_pulse= 0;
-    //CLOSE VALVE
-    digitalWrite(Close_MFC1, HIGH);
+    digitalWrite(Close_MFC1, HIGH); //CLOSE VALVE
+
     checkbox2 = 0;
+    timer_enable2 = 0;
+    timer_enable_pulse2 = 0;
     delta2=0;
     delta2_pulse= 0;
     digitalWrite(Close_MFC2, HIGH);
 
     checkbox3 = 0;
+    timer_enable3 = 0;
+    timer_enable_pulse3 = 0;
     delta3=0;
     delta3_pulse= 0;
     digitalWrite(Close_MFC3, HIGH);
 
+    timer_enable_pulse4 = 0;
+    timer_enable4 = 0;
     checkbox4 = 0; 
     delta4=0;
     delta4_pulse= 0;
