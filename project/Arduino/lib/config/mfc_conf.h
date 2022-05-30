@@ -1,7 +1,6 @@
 #ifndef MFC_CONFIG_H
 #define MFC_CONFIG_H
 
-
 #define Close_MFC1 26
 #define Close_MFC2 27
 #define Close_MFC3 28
@@ -20,6 +19,17 @@
 #define PWM_INPUT4 5
 
 const int sinalMKS = 5; 
+
+float MFC_V = 0;
+char buff[10];
+
+uint32_t number2 = 0;  // Create variable to store value of slider
+
+int mcfOutput1 = 1 ;
+int mcfOutput2 = 1 ;
+int mcfOutput3 = 1 ;
+int mcfOutput4 = 1 ;
+
 
 uint32_t mfcSCCM1 = 500 ;
 uint32_t mfcSCCM2 = 500 ;

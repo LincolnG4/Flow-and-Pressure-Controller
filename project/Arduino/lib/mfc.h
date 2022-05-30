@@ -1,9 +1,13 @@
 #ifndef MFC_H
 #define MFC_H
 
-#include "variables.h"
+#include "controler.h"
 
-
+/*
+* This read MFC and applies gas correction factor
+* @param MFC_number T_print textMFCOut GasFactor mfcSCCM
+* @return MeasureMFC 
+*/
 float MFCRead(int MFC,NexText t,NexText t_out, float Calibrated_MFC,uint32_t mfcSCCM){
   char mfcOutputString[10];
   float gas_factor_in;
@@ -27,14 +31,17 @@ float MFCRead(int MFC,NexText t,NexText t_out, float Calibrated_MFC,uint32_t mfc
 }
 
 
-
-void MfcPwmON(int PWM_INPUT,int delta,NexText t,NexNumber n){
+/*
+* Send PWM signal to open valve
+* @param PinPWM timer timerText SCCMValveOpen CalibratedSCCM
+*/
+void MfcPwmON(int PWM_INPUT,int delta,NexText t,NexNumber n,uint32_t mfcSCCM ){
   char buffer[100] = {0};
   uint32_t val;
 
   n.getValue(&val);
   
-  val = map(val, 0, 500, 0, 255);
+  val = map(val, 0, mfcSCCM, 0, 255);
 
   
   analogWrite(PWM_INPUT, val);
@@ -43,17 +50,19 @@ void MfcPwmON(int PWM_INPUT,int delta,NexText t,NexNumber n){
   t.setText(buffer);
 }
 
-void MfcPwmClose(int PWM_INPUT,int delta,NexText t){
+/*
+* This sends PWM zero to close valve 
+* @param t_calibrate MFC SCCM value
+* @return new float MFC SCCM calibration 
+*/
+void MfcPwmClose(int PWM_INPUT,int delta,NexText t,int Close_MFC){
   char bufferclose[100] = {0};
-  analogWrite(PWM_INPUT, 0);
   
+  digitalWrite(Close_MFC, HIGH);
+  analogWrite(PWM_INPUT, 0);
+
   itoa(delta,bufferclose, 10);
   t.setText(bufferclose);
-}
-
-void MfcPwmOFF(int PWM_INPUT,NexCheckbox c){
-  analogWrite(PWM_INPUT, 0);
-  c.setValue(0);
 }
 
 

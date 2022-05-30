@@ -1,8 +1,13 @@
 #ifndef SDCARD_H
 #define SDCARD_H
 
-#include "variables.h"
+#include "controler.h"
 
+
+/*
+* This write the measures to CSV file
+* @param fileObject message
+*/
 
 void WriteSD(File myFile,String message){
   if (myFile) {

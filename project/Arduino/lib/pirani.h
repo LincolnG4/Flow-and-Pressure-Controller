@@ -1,8 +1,16 @@
 #ifndef PIRANI_H
 #define PIRANI_H
 
-#include "variables.h"
+#include "controler.h"
 
+
+/*
+* Read Pirani
+* This get signal from Pirani, converts from V to Torr and applies a correction factor considering the gas %.
+* If no MFC is turned ON, it won't apply  a correction factor
+* @params Checkbox1_4, GasFactor1_4, MFC_valve
+* @return Pirani in torr 
+*/
 float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32_t checkbox4,NexText t_gas1,NexText t_gas2,NexText t_gas3,NexText t_gas4,int mcfOutput1,int mcfOutput2,int mcfOutput3,int mcfOutput4){
   float Pirani_V = 0;
   float totalFlow=0;
@@ -19,18 +27,18 @@ float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32
   Pirani_V = (sinalPirani/SinalMCU)*((SinalMCU*(analogRead(Read_Pirani)))/bitsMCU); 
   
 
-  if(checkbox1==0 && checkbox2==0 && checkbox3==0 && checkbox4==0){
+  if(checkbox1==0 && checkbox2==0 && checkbox3==0 && checkbox4==0){ //if mfc's are turned off
       Pirani_Torr = 10000.00*(pow(10,(Pirani_V-6.125)));
       return Pirani_Torr;
   } 
-  else{
-    if(checkbox1==1){
+  else{ //mfc's are turned off, calculate % gas and apply correction factor to Pirani measure
+    if(checkbox1==1){ 
       
-      totalFlow = totalFlow + mcfOutput1;
+      totalFlow = totalFlow + mcfOutput1; 
     
-      memset(bufferText, 10, sizeof(bufferText));
+      memset(bufferText, 10, sizeof(bufferText)); 
       t8.getText(bufferText, sizeof(bufferText));
-      gas_factor_1 = atof(bufferText);
+      gas_factor_1 = atof(bufferText); 
     }
     if(checkbox2==1){
       
@@ -58,7 +66,7 @@ float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32
     }
     
     correctionFactor = checkbox1*(mcfOutput1/totalFlow)*gas_factor_1 + checkbox2*(mcfOutput2/totalFlow)*gas_factor_2 + checkbox3*(mcfOutput3/totalFlow)*gas_factor_3+ checkbox4*(mcfOutput4/totalFlow)*gas_factor_4;
-    Pirani_Torr = 10000.00*(pow(10,((Pirani_V*correctionFactor)-6.125)));
+    Pirani_Torr = 10000.00*(pow(10,((Pirani_V*correctionFactor)-6.125)));  // convert V to Torr and applies correction Factor
     return Pirani_Torr;
   }
 
@@ -68,7 +76,7 @@ float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32
 
 void SendTextT4(float Pirani_V){
   dtostrf(Pirani_V, 4, 3, buff);
-  t10.setText(buff);
+  t10.setText(buff); // Print on screen the Pirani value
 }
 
 

@@ -2,10 +2,7 @@
 #define TOUCH_H
 
 #include <Nextion.h>
-#include "variables.h"
-/////////////////////////////////////////////////////////////////
-//////////////////// CONFIGURE - NEXTION ///////////////////////
-///////////////////////////////////////////////////////////////
+#include "controler.h"
 
 int CurrentPage = 0;  // Create a variable to store which page is currently loaded
 
@@ -17,7 +14,11 @@ uint32_t dual_state;
 uint32_t dual_state2; 
 
 
-//NEXTION
+/*
+* Nextion objects declaration 
+* @param NextionObject variableName = NentionObject(pageNumber,objectID,objectAlias)
+*/
+
 NexPage p0 = NexPage(0,0,"page0");
 NexPage p1 = NexPage(1,0,"page1");
 NexPage p2 = NexPage(2,0,"page2");
@@ -78,10 +79,12 @@ NexCheckbox c0 = NexCheckbox(2,6,"c0");
 NexCheckbox c1 = NexCheckbox(2,3,"c1"); 
 NexCheckbox c2 = NexCheckbox(2,8,"c2");
 NexCheckbox c3 = NexCheckbox(2,9,"c3");
-
 NexVariable v0 = NexVariable(0,4,"va0");
 uint32_t pageVar=0;
 
+/*
+* Nextion objects insert 
+*/
 
 NexTouch *nex_listen_list[] = {
   &v0,&p0,&p1,&p2,&p0_b1,&p0_b2,&p1_b0,&p2_b1,&p1_b2,&t1,&t2,&t3,&t4,&t8,&t19,&t20,&t21,&bt2,&bt3,&bt4,&bt5,&bt6,&bt7,&bt9,&bt10,&bt8,&bt11,&c0,&c1,&c2,&c3,&n0,&n3,&n6,&n8,&n9,&n10,&n11,&n12,&n13,&n14,&n15,&n16,&n17,&n18,&n19, NULL
@@ -92,10 +95,12 @@ uint32_t numberu2;
 uint32_t numberu3;
 uint32_t numberu4;
 
+/*
+* Press Event for buttons Objects
+*/
 void p0_b1_Press(void *ptr) {
-  CurrentPage = 1;
-
-  p2.show();
+  CurrentPage = 1; //change page variable
+  p2.show(); //change page
 }
 
 void p2_b1_Press(void *ptr) {
