@@ -74,7 +74,7 @@ float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32
 void piraniUpdateScreen(float Pirani_V){
   dtostrf(Pirani_V, 4, 2, buff);
   t10.setText(buff); // Print on screen the Pirani value
-  if(Pirani_V<0.7498 && Pirani_V>7498942.0933){
+  if(Pirani_V<0.7498 || Pirani_V>7498942.0933){
     t10.Set_font_color_pco(57959);
   }
   else{
