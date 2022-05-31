@@ -7,7 +7,7 @@
 /*
 * Read Pirani
 * This get signal from Pirani, converts from V to Torr and applies a correction factor considering the gas %.
-* If no MFC is turned ON, it won't apply  a correction factor
+* If no MFC is turned ON, it won't apply a correction factor
 * @params Checkbox1_4, GasFactor1_4, MFC_valve
 * @return Pirani in torr 
 */
@@ -69,14 +69,17 @@ float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32
     Pirani_Torr = 10000.00*(pow(10,((Pirani_V*correctionFactor)-6.125)));  // convert V to Torr and applies correction Factor
     return Pirani_Torr;
   }
-
-  
 } 
 
-
-void SendTextT4(float Pirani_V){
-  dtostrf(Pirani_V, 4, 3, buff);
+void piraniUpdateScreen(float Pirani_V){
+  dtostrf(Pirani_V, 4, 2, buff);
   t10.setText(buff); // Print on screen the Pirani value
+  if(Pirani_V<0.7498 && Pirani_V>7498942.0933){
+    t10.Set_font_color_pco(57959);
+  }
+  else{
+    t10.Set_font_color_pco(61342);
+  }
 }
 
 

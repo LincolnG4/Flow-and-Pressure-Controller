@@ -20,11 +20,9 @@ float MFCRead(int MFC,NexText t,NexText t_out, float Calibrated_MFC,uint32_t mfc
   t_out.getText(bufferText, sizeof(bufferText));
 
   gas_factor_in = atof(bufferText);
-  
   output_MFC_factor = float(MFC_V)*(gas_factor_in/Calibrated_MFC);
 
   dtostrf(output_MFC_factor, 1, 2, mfcOutputString); 
-  //itoa(output_MFC_factor,mfcOutputString, 10);
   t.setText(mfcOutputString);
 
   return output_MFC_factor;
@@ -40,10 +38,8 @@ void MfcPwmON(int PWM_INPUT,int delta,NexText t,NexNumber n,uint32_t mfcSCCM ){
   uint32_t val;
 
   n.getValue(&val);
-  
-  val = map(val, 0, mfcSCCM, 0, 255);
 
-  
+  val = map(val, 0, mfcSCCM, 0, 255);
   analogWrite(PWM_INPUT, val);
   
   itoa(delta,buffer, 10);
@@ -64,7 +60,6 @@ void MfcPwmClose(int PWM_INPUT,int delta,NexText t,int Close_MFC){
   itoa(delta,bufferclose, 10);
   t.setText(bufferclose);
 }
-
 
 
 #endif

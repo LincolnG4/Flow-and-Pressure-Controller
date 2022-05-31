@@ -143,8 +143,8 @@ void loop() {
 
     if(dual_state) // Master-key ON
     {
-      Pirani_V = PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4);
-      SendTextT4(Pirani_V); // Print Pirani value on LCD
+      Pirani_t = PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4);
+      piraniUpdateScreen(Pirani_t); // Print Pirani value on LCD
 
       // Read current time from DS1307 module
       myRTC.updateTime();
@@ -155,7 +155,7 @@ void loop() {
       uint32_t unix = stamp.getUnix();
 
       //Serial.println("[INFO] - MasterKey on");
-      //Serial.println("[INFO] - Pirani Torr " + String(Pirani_V));
+      //Serial.println("[INFO] - Pirani Torr " + String(Pirani_t));
       //Serial.println("[INFO] - Time " + TimeString);
 
       uint32_t start_mfc1;
@@ -565,7 +565,6 @@ void loop() {
           ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)) + "," + String(MFC1_value) + "," + String(MFC2_value) + "," + String(MFC3_value) + "," + String(MFC4_value);
           Serial2.println(ESP_MESSAGE);
           ESP_TIMER = unix; // ESP time reference
-          //delay(300);
       }
     }
     else{
@@ -627,7 +626,6 @@ void loop() {
     delta4_pulse= 0;
     digitalWrite(Close_MFC4, HIGH);
   }
-  
 
   }
 
@@ -642,7 +640,7 @@ void loop() {
       Calibrated_MFC_1 = ReadCalibrate(t1);
       n16.getValue(&mfcSCCM1);
       delay(60);
-
+      
       Calibrated_MFC_2 = ReadCalibrate(t2);
       n17.getValue(&mfcSCCM2);
       delay(60);
