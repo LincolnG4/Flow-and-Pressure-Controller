@@ -25,10 +25,10 @@ char buff[10];
 
 uint32_t number2 = 0;  // Create variable to store value of slider
 
-int mcfOutput1 = 1 ;
-int mcfOutput2 = 1 ;
-int mcfOutput3 = 1 ;
-int mcfOutput4 = 1 ;
+int MFC1_value = 1 ;
+int MFC2_value = 1 ;
+int MFC3_value = 1 ;
+int MFC4_value = 1 ;
 
 
 uint32_t mfcSCCM1 = 500 ;

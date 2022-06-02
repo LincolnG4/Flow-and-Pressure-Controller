@@ -143,7 +143,7 @@ void loop() {
 
     if(dual_state) // Master-key ON
     {
-      Pirani_t = PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4);
+      Pirani_t = PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,MFC1_value,MFC2_value,MFC3_value,MFC4_value);
       piraniUpdateScreen(Pirani_t); // Print Pirani value on LCD
 
       // Read current time from DS1307 module
@@ -171,7 +171,7 @@ void loop() {
 
       // Read Pirani and save into a CSV file on SDcard
       Pirani_CSV = SD.open("PIRANI.csv", FILE_WRITE);
-      String messagePirani = TimeString + "," + String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)); //
+      String messagePirani = TimeString + "," + String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,MFC1_value,MFC2_value,MFC3_value,MFC4_value)); //
       WriteSD(Pirani_CSV,messagePirani);
       
       //if ESP01 enabled on variables.h file, it gets ESP01 time start reference
@@ -292,6 +292,7 @@ void loop() {
           delta_pulse= 0;
           int delta = 0;
           int delta_pulse= 0;
+          MFC1_value = 0;
         }
 
       // CHECKBOX 2 - MFC 2 
@@ -380,6 +381,7 @@ void loop() {
         timer_enable_pulse2 = 0;
         int delta2 = 0;
         int delta_pulse2= 0;
+        MFC2_value = 0;
       }
 
       // CHECKBOX 3 - MFC 3 
@@ -470,6 +472,7 @@ void loop() {
         timer_enable_pulse3 = 0;
         int delta3 = 0;   
         int delta_pulse3= 0;
+        MFC3_value = 0;
       }
 
       // CHECKBOX 4 - MFC 4
@@ -558,11 +561,12 @@ void loop() {
         delta4 = 0; 
         delta4_pulse= 0;
         start_mfc4_pulse = 0;
+        MFC4_value = 0;
       }  
 
       // ESP 01 SEND MESSAGE 
       if (unix - ESP_TIMER >= ESP_DELAY){
-          ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,mcfOutput1,mcfOutput2,mcfOutput3,mcfOutput4)) + "," + String(MFC1_value) + "," + String(MFC2_value) + "," + String(MFC3_value) + "," + String(MFC4_value);
+          ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,MFC1_value,MFC2_value,MFC3_value,MFC4_value)) + "," + String(MFC1_value) + "," + String(MFC2_value) + "," + String(MFC3_value) + "," + String(MFC4_value);
           Serial2.println(ESP_MESSAGE);
           ESP_TIMER = unix; // ESP time reference
       }
