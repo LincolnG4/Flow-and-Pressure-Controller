@@ -11,7 +11,7 @@
 * @params Checkbox1_4, GasFactor1_4, MFC_valve
 * @return Pirani in torr 
 */
-float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32_t checkbox4,NexText t_gas1,NexText t_gas2,NexText t_gas3,NexText t_gas4,int mcfOutput1,int mcfOutput2,int mcfOutput3,int mcfOutput4){
+float PiraniRead(uint32_t checkbox1,uint32_t checkbox2,uint32_t checkbox3,uint32_t checkbox4,NexText t_gas1,NexText t_gas2,NexText t_gas3,NexText t_gas4,float mcfOutput1,float mcfOutput2,float mcfOutput3,float mcfOutput4){
   float Pirani_V = 0;
   float totalFlow=0;
   float correctionFactor=1;
