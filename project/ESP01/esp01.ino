@@ -8,11 +8,11 @@ char* randNumber;
 char *strings[30]; 
 char *ptr = NULL;
 
-int Pirani_ESP = 0;
-int MFC1_ESP = 0 ;
-int MFC2_ESP = 0 ;
-int MFC3_ESP = 0 ;
-int MFC4_ESP = 0;
+float Pirani_ESP = 0.0;
+float MFC1_ESP = 0.0 ;
+float MFC2_ESP = 0.0 ;
+float MFC3_ESP = 0.0 ;
+float MFC4_ESP = 0.0 ;
 
 char buf[30];
 
@@ -83,11 +83,11 @@ void loop() {
             ptr = strtok(NULL, ",");
          }
         
-        Pirani_ESP = atoi(strings[0]); 
-        MFC1_ESP = atoi(strings[1]);
-        MFC2_ESP = atoi(strings[2]);
-        MFC3_ESP = atoi(strings[3]);
-        MFC4_ESP = atoi(strings[4]);
+        Pirani_ESP = atof(strings[0]); 
+        MFC1_ESP = atof(strings[1]);
+        MFC2_ESP = atof(strings[2]);
+        MFC3_ESP = atof(strings[3]);
+        MFC4_ESP = atof(strings[4]);
 
         sendData(Pirani_ESP,MFC1_ESP,MFC2_ESP,MFC3_ESP,MFC4_ESP);
         
@@ -100,7 +100,7 @@ void loop() {
 }
 
 // Subroutine for sending data to Google Sheets
-void sendData(int Pirani_ESP, int MFC1_ESP,int MFC2_ESP,int MFC3_ESP,int MFC4_ESP) {
+  void sendData(float Pirani_ESP, float MFC1_ESP,float MFC2_ESP,float MFC3_ESP,float MFC4_ESP) {
   Serial.println("==========");
   Serial.print("connecting to ");
   Serial.println(host);
@@ -113,11 +113,11 @@ void sendData(int Pirani_ESP, int MFC1_ESP,int MFC2_ESP,int MFC3_ESP,int MFC4_ES
   //----------------------------------------
 
   //----------------------------------------Processing data and sending data
-  String string_Pirani_ESP =  String(Pirani_ESP,DEC);
-  String string_MFC1_ESP =  String(MFC1_ESP,DEC);
-  String string_MFC2_ESP =  String(MFC2_ESP,DEC);
-  String string_MFC3_ESP =  String(MFC3_ESP,DEC);
-  String string_MFC4_ESP =  String(MFC4_ESP,DEC);
+  String string_Pirani_ESP =  String(Pirani_ESP);
+  String string_MFC1_ESP =  String(MFC1_ESP);
+  String string_MFC2_ESP =  String(MFC2_ESP);
+  String string_MFC3_ESP =  String(MFC3_ESP);
+  String string_MFC4_ESP =  String(MFC4_ESP);
   
   String url = "/macros/s/" + GAS_ID + "/exec?Pirani=" + string_Pirani_ESP + "&MFC1=" + string_MFC1_ESP+ "&MFC2=" + string_MFC2_ESP + "&MFC3=" + string_MFC3_ESP + "&MFC4=" + string_MFC4_ESP;
   Serial.print("requesting URL: ");
