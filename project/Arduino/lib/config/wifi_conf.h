@@ -5,6 +5,6 @@ String ESP_MESSAGE = "0,0,0,0,0"; // data sorted by --> "PIRANI,MFC1,MFC2,MFC3,M
 
 int ESP_ENABLE=0; // if starts:  0 --> Enable / 1 --> Disable
 int ESP_TIMER=0; // delay to send message
-int ESP_DELAY=4; // delay to send message
+int ESP_DELAY=0; // delay to send message
 
 #endif

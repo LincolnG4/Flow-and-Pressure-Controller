@@ -41,7 +41,7 @@ void setup() {
   */
  
   // SERIAL DEBUGGING
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   //Serial.println("[INFO] - Debug serial started");
   if (Serial1.available() > 0) {
