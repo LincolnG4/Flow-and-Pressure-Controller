@@ -1,0 +1,90 @@
+
+(rules PCB TCC_Flowback
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (autoroute on)
+    (postroute on)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 476)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 2.3)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 1.7)
+    )
+  )
+  (rule
+    (width 250.0)
+    (clear 200.2)
+    (clear 125.0 (type smd_to_turn_gap))
+    (clear 50.0 (type smd_smd))
+  )
+  (padstack "Via[0-1]_800:400_um"
+    (shape
+      (circle F.Cu 800.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 800.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_800:400_um" "Via[0-1]_800:400_um" default
+  )
+  (via 
+    "Via[0-1]_800:400_um-kicad_default" "Via[0-1]_800:400_um" "kicad_default"
+  )
+  (via_rule
+    default "Via[0-1]_800:400_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_800:400_um-kicad_default"
+  )
+  (class default
+    "Net-(R1-Pad2)" "Net-(C1-Pad2)" "Net-(C1-Pad1)" "Net-(R3-Pad2)" "Net-(C2-Pad1)" "Net-(R4-Pad2)" "Net-(C3-Pad1)" "Net-(R5-Pad2)"
+    "Net-(C4-Pad1)" "Net-(R6-Pad2)" "Net-(Tela1-Pad2)" "Net-(Tela1-Pad3)" +15 "unconnected-(XA1-PadRST2)" "unconnected-(XA1-PadGND4)" "unconnected-(XA1-PadMOSI)"
+    "unconnected-(XA1-PadSCK)" "unconnected-(XA1-Pad5V2)" "unconnected-(XA1-PadVIN)" "unconnected-(XA1-PadGND3)" "unconnected-(XA1-PadGND2)" "unconnected-(XA1-Pad5V1)" "unconnected-(XA1-Pad3V3)" "unconnected-(XA1-PadRST1)"
+    "unconnected-(XA1-PadIORF)" "unconnected-(XA1-PadD21)" "unconnected-(XA1-PadD20)" "unconnected-(XA1-PadD17)" "unconnected-(XA1-PadD16)" "unconnected-(XA1-PadD15)" "unconnected-(XA1-PadD14)" "unconnected-(XA1-PadD0)"
+    "unconnected-(XA1-PadD1)" "unconnected-(XA1-PadD6)" "unconnected-(XA1-PadD7)" "unconnected-(XA1-PadGND1)" "unconnected-(XA1-PadD9)" "unconnected-(XA1-PadD10)" "unconnected-(XA1-PadSCL)" "unconnected-(XA1-PadSDA)"
+    "unconnected-(XA1-PadAREF)" "unconnected-(XA1-PadD13)" "unconnected-(XA1-PadD12)" "unconnected-(XA1-PadD11)" "unconnected-(XA1-PadA4)" "unconnected-(XA1-PadA6)" "unconnected-(XA1-PadA7)" "unconnected-(XA1-PadA8)"
+    "unconnected-(XA1-PadA9)" "unconnected-(XA1-PadA10)" "unconnected-(XA1-PadA11)" "unconnected-(XA1-PadA12)" "unconnected-(XA1-PadA13)" "unconnected-(XA1-PadA14)" "unconnected-(XA1-PadA15)" "unconnected-(XA1-Pad5V4)"
+    "unconnected-(XA1-PadD24)" "unconnected-(XA1-PadD25)" "unconnected-(XA1-PadD26)" "unconnected-(XA1-PadD27)" "unconnected-(XA1-PadD28)" "unconnected-(XA1-PadD29)" "unconnected-(XA1-PadD30)" "unconnected-(XA1-PadD31)"
+    "unconnected-(XA1-PadD32)" "unconnected-(XA1-PadD33)" "unconnected-(XA1-PadD34)" "unconnected-(XA1-PadD35)" "unconnected-(XA1-PadD36)" "unconnected-(XA1-PadD37)" "unconnected-(XA1-PadD38)" "unconnected-(XA1-PadD39)"
+    "unconnected-(XA1-PadD40)" "unconnected-(XA1-PadD41)" "unconnected-(XA1-PadD42)" "unconnected-(XA1-PadD43)" "unconnected-(XA1-PadD44)" "unconnected-(XA1-PadD45)" "unconnected-(XA1-PadD46)" "unconnected-(XA1-PadD47)"
+    "unconnected-(XA1-PadD48)" "unconnected-(XA1-PadD49)" "unconnected-(XA1-PadGND6)" "unconnected-(XA1-PadMISO)" "Net-(Pirani1-Pad3)" "Net-(MicroSd1-Pad2)" "Net-(Clock1-Pad3)" "Net-(Clock1-Pad4)"
+    "Net-(Clock1-Pad5)" "Net-(MicroSd1-Pad3)" "Net-(MicroSd1-Pad4)" "Net-(MicroSd1-Pad5)" "Net-(MicroSd1-Pad6)" "unconnected-(Pirani1-Pad4)" "unconnected-(Pirani1-Pad6)" "unconnected-(Pirani1-Pad7)"
+    "unconnected-(Pirani1-Pad8)" "unconnected-(MFC1-Pad1)" "Net-(MFC1-Pad2)" "unconnected-(MFC1-Pad5)" "unconnected-(MFC1-Pad8)" "unconnected-(MFC1-Pad9)" "unconnected-(MFC2-Pad1)" "Net-(MFC2-Pad2)"
+    "unconnected-(MFC2-Pad5)" "unconnected-(MFC2-Pad8)" "unconnected-(MFC2-Pad9)" "unconnected-(MFC3-Pad1)" "Net-(MFC3-Pad2)" "unconnected-(MFC3-Pad5)" "unconnected-(MFC3-Pad8)" "unconnected-(MFC3-Pad9)"
+    "unconnected-(MFC4-Pad1)" "Net-(MFC4-Pad2)" "unconnected-(MFC4-Pad5)" "unconnected-(MFC4-Pad8)" "unconnected-(MFC4-Pad9)" "Net-(XA1-PadA5)"
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    (clearance_class "kicad_default")
+    (via_rule kicad_default)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)
