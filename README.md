@@ -1,5 +1,8 @@
 # Protótipo de controle de fluxo de massa e leitura de pressão
 
+`![Projeto](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/a507edb70d68dfbb9c46d5f693ae8e5e239c7549/img/visao_geral.png = 500x450)`
+
+
 O objetivo principal deste trabalho é desenvolver um protótipo de um sistema, composto de _hardware_, _firmware_ e _software_, para controle do fluxo e pressão de gases durante tratamento de materiais.
 
 Os objetivos :
