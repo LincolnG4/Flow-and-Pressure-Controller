@@ -57,9 +57,9 @@ Versão da placa: esp8266 2.4.3
 
 ### Como instalar uma biblioteca  (Arduino e ESP01)
 
- 1. Abra o link para o donwload da biblioteca (ex: `https://github.com/itead/ITEADLIB_Arduino_Nextion`) e faça o download do `.ZIP`
+ 1. Abra o link para o donwload da biblioteca (ex: `https://github.com/itead/ITEADLIB_Arduino_Nextion`) e faça o download do `.ZIP`  
 ![download](https://sites.northwestern.edu/researchcomputing/files/2021/05/github.png) 
-2. Abra o `Arduino IDE` e vá em `Sketch`>`Incluir biblioteca`> `Adicionar biblioteca .ZIP`
+2. Abra o `Arduino IDE` e vá em `Sketch`>`Incluir biblioteca`> `Adicionar biblioteca .ZIP`  
 ![include](https://www.robocore.net/upload/tutoriais/32_img_2_H.png)
 3. Selecione a biblioteca que você fez o download no Passo 1 
 
