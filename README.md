@@ -67,17 +67,17 @@ Versão da placa: esp8266 2.4.3
 
 #### Arduino 
 
-1. Abra o `Arduino IDE` e vá em `Ferramentas`>`Placa:`>`Gerenciador de placas`
+1. Abra o `Arduino IDE` e vá em `Ferramentas`>`Placa:`>`Gerenciador de placas`  
 
 ![Como programar o NodeMCU com Arduino IDE - Tutoriais - RoboCore](https://www.robocore.net/upload/tutoriais/162_img_3_H.png)
 2. Procure pela placa `Arduino AVR Boards` e selecione a versão `1.8.3`
 
 #### ESP01
-1.Abra o `Arduino IDE` e vá em `Arquivos`>`Preferências`
-2. No campo `URLs adicionais de Gerenciadores de Placas`, insira o link  `http://arduino.esp8266.com/stable/package_esp8266com_index.json`
+1.Abra o `Arduino IDE` e vá em `Arquivos`>`Preferências`  
+2. No campo `URLs adicionais de Gerenciadores de Placas`, insira o link  `http://arduino.esp8266.com/stable/package_esp8266com_index.json`  
 
 ![Como programar o NodeMCU com Arduino IDE - Tutoriais - RoboCore](https://www.robocore.net/upload/tutoriais/162_img_2_H.png)
-3. Vá em `Ferramentas`>`Placa:`>`Gerenciador de placas`
+3. Vá em `Ferramentas`>`Placa:`>`Gerenciador de placas`  
 4. Procure pela placa `esp8266 by ESP8266 community` e selecione a versão `2.4.3`
 
 ## Passo a Passo de instalação
