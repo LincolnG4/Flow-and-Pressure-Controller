@@ -55,8 +55,17 @@ Lista de desejos para o futuro do projeto:
 | Transistor BC337 |4| 0,27 | 1,08 | [Compre](https://www.eletrogate.com/ecfjb2rzm-transistor-npn-bc337)  |
 | __TOTAL__ ||  |  __544,40__|  |
 
+## 1.2 Tabela de fatores de correção dos gases
+
+Faça o download da tabela de fatores de coreção dos gases em  [DOWNLOAD](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/gasfactor.xlsx)
 
 
+## 1.3 FAQ & Troubleshooting
+
+> **A tela do produto está funcionando mas ele não retorna nenhum valor de medição**
+
+- Certifique-se que os conectores da tela estão soldados corretamente 
+- Conecte o Arduino na porta USB do seu computador e siga os passos  
 
 # 2. Software Utilizados
 
@@ -133,9 +142,9 @@ Versão da placa: esp8266 2.4.3
 
 #### Arduino 
 
-1. Abra o `Arduino IDE` e vá em `Ferramentas`>`Placa`>`Gerenciador de placas`  
+1. Abra o `Arduino IDE` e clique em `Ferramentas`>`Placa`>`Gerenciador de placas`  
 
-![Como programar o NodeMCU com Arduino IDE ](https://www.robocore.net/upload/tutoriais/162_img_3_H.png)
+![Como programar o NodeMCU com Arduino IDE ](https://www.robocore.net/upload/tutoriais/162_img_3_H.png)   
 2. Procure pela placa `Arduino AVR Boards` e selecione a versão `1.8.3`  
 _______
 #### ESP01
@@ -164,4 +173,12 @@ Com todas as bibliotecas configuradas, é possível desenvolver e carregar o có
 
 - Clique no botão `Verificar`, se o IDE não retornar nenhum erro, clique no botão `Carregar`
 ![VeridicarArduino](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/carrg.PNG?raw=true)![VeridicarArduino](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/carregar.PNG?raw=true)
-- Se ocorrer tudo certo, o IDE ira retornar a mensagem `Carregado`
+- Se tudo ocorrer certo, o IDE ira retornar a mensagem `Carregado`
+
+#### 3.3.1.1 Debugging Arduino
+Caso você esteja desconfiado que o Arduino não está funcionando corretamente, ative a opção de debbuging:
+
+1. Abra o `Arduino IDE` > `main.ino`
+2. Pressione as teclas `Ctrl` + `F` para abrir o terminal `Localizar`
+3. 
+![Localizar e substituir](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/SubLoc.PNG?raw=true)
