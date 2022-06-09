@@ -57,6 +57,7 @@ Lista de desejos para o futuro do projeto:
 
 
 
+
 # 2. Software Utilizados
 
 | SOFTWARE        | DESCRIÇÃO|DOWNLOAD |
@@ -68,6 +69,13 @@ Lista de desejos para o futuro do projeto:
 |`Photopea`|Edição de fotos|https://photopea.com/|
 |`Schematic editor`|Auto routing para trilha PCB|https://layouteditor.com/download|
 |`Visual Studio Code e/ou Arduino IDE`|Edição de codigos|https://code.visualstudio.com / https://www.arduino.cc/en/software/download|
+
+## 2.2 Links úteis 
+[Basico do Arduino](https://www.if.ufrj.br/~gpenello/DisciplinasAntigas/Lab2_2018-1/GUIA_ARDUINO_v.2.pdf)
+[Básico de Linguagem C++](https://www.inf.ufpr.br/ci208/NotasAula.pdf)
+[Básico Cura 3D](https://3dlab.com.br/cura-3d-ultimaker/)
+[FreeCAD -> SolidWorks / SolidWorks -> FreeCAD](https://forum.freecadweb.org/viewtopic.php?style=4&t=20778)
+
 
 # 3. Passo a Passo de construção e instalação
 ## 3.1 Impressão do  case 3D
@@ -142,13 +150,18 @@ _______
 Com todas as bibliotecas configuradas, é possível desenvolver e carregar o código para o  Arduino, Esp e Nextion.
 
 `Faça o download desse respositório e descompacte em alguma pasta do seu computado`:
-![Download repositorio](
-https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/repoDownlod.PNG?raw=true)
+![Download repositorio](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/repoDownlod.PNG?raw=true)
 
-### Arduino
-
+### 3.3.1 Arduino
 - Abra o [`Arduino IDE`](#software-utilizados) em seu computador e vá em `Arquivo` > `Abrir`
-- Vá até a pasta onde voce descompactou o repositório repositório, navegue por `Flow-and-Pressure-Controller-main` > `project` > `main.ino` 
+- Vá até a pasta onde voce descompactou o repositório repositório, navegue por `Flow-and-Pressure-Controller-main` > `project` > `main.ino`   
+- Certifique-se que a pasta `lib` esta na mesma pasta que o `main.lib`  
+![ConfMain](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/lib.PNG?raw=true)
+- Conecte o `Arduino Mega` via porta `USB`  
+- Clique em `Ferramentas` e selecione as configurações :  
+  
+ *obs: a porta irá variar de acordo com a porta que o Arduino foi conectado ao seu dispositivo 
 
-- Conecte o `Arduino Mega` via porta `USB`
-- No 
+- Clique no botão `Verificar`, se o IDE não retornar nenhum erro, clique no botão `Carregar`
+![VeridicarArduino](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/carrg.PNG?raw=true)![VeridicarArduino](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/carregar.PNG?raw=true)
+- Se ocorrer tudo certo, o IDE ira retornar a mensagem `Carregado`
