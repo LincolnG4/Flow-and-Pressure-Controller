@@ -40,19 +40,19 @@ Lista de desejos para o futuro do projeto:
 |--|--|--|--|--|
 |Arduino Mega|1| 200,00 | 200,00  | [Compre](https://www.baudaeletronica.com.br/arduino-mega-2560-compativel-cabo-usb.html) |
 | Capacitor 1uF |9| 0,23 | 2,07 | [Compre](https://www.eletrogate.com/capacitor-eletrolitico-1uf-x-50v ) |
-| Conector DB9|4|3,00  | 12,00 |  |
+| Conector DB9|4|3,00  | 12,00 |  [Compre](https://www.soldafria.com.br/conector-db9-macho-90-graus-solda-placa-p-1709.html) |
 | Conector RJ45 |1|4,00 | 4,00  |  |
-| Conector Alimentação|1| 2,50 | 2,50  |  |
+| Conector Alimentação|1| 2,50 | 2,50  | [Compre](https://www.robocore.net/conector/conector-dc-p4-femea)  |
 | Fonte de alimentação 24V |1| 30,00 | 30,00 |  |
-| Modulo Leitor de microSD | 1 | 12,00 | 12,00 |  |
-| Modulo LM2596 StepDown | 1 |15,00  | 15,00  |  |
+| Modulo Leitor de microSD | 1 | 12,00 | 12,00 | [Compre](https://www.eletrogate.com/modulo-micro-sd-card)  |
+| Modulo LM2596 StepDown | 1 |15,00  | 15,00  | [Compre](https://www.filipeflop.com/produto/regulador-de-tensao-lm2596-conversor-dc-dc-step-down/) |
 | Modulo WiFi ESP8266 |1| 20,00 | 20,00  | [Compre](https://www.eletrogate.com/modulo-wifi-serial-esp8266-esp-01) |
 | Resistor 4.7k Ohms |6|0,05| 0,30 | [Compre](https://www.eletrogate.com/resistor-4k7-1-4w-10-unidades ) |
 | Resistor 470 Ohms |8| 0,05 |0,40 |[Compre](https://www.eletrogate.com/resistor-4k7-1-4w-10-unidades )  |
 | Resistor 220 Ohms |1| 0,05 | 0,05  |[Compre](https://www.eletrogate.com/resistor-4k7-1-4w-10-unidades ) |
-| RTC 1302 | 1 | 10,00 |10,00 |  |
-| Tela Nextion 320x240 |1| 120,00 |120,00  |  |
-| Transistor BC337 |4| 0,27 | 1,08 |  |
+| RTC 1302 | 1 | 10,00 |10,00 | [Compre](https://www.eletrogate.com/modulo-real-time-clock-ds1302) |
+| Tela Nextion 320x240 |1| 120,00 |120,00  | [Compre](https://pt.aliexpress.com/item/32685352949.html?spm=a2g0o.productlist.0.0.10a12308w7t6Pf&algo_pvid=ee404ca7-f5a8-4c20-a123-40767543fb84&algo_exp_id=ee404ca7-f5a8-4c20-a123-40767543fb84-0&pdp_ext_f=%7B%22sku_id%22%3A%2260390805771%22%7D&pdp_npi=2%40dis%21BRL%21%21102.36%21%21%2133.26%21%21%402101d4a716547459631704164eff88%2160390805771%21sea)|
+| Transistor BC337 |4| 0,27 | 1,08 | [Compre](https://www.eletrogate.com/ecfjb2rzm-transistor-npn-bc337)  |
 | __TOTAL__ ||  |  __544,40__|  |
 
 
