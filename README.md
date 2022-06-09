@@ -180,5 +180,14 @@ Caso você esteja desconfiado que o Arduino não está funcionando corretamente,
 
 1. Abra o `Arduino IDE` > `main.ino`
 2. Pressione as teclas `Ctrl` + `F` para abrir o terminal `Localizar`
-3. 
-![Localizar e substituir](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/SubLoc.PNG?raw=true)
+3. Preencha:
+
+|**Campo** | **Valor** |
+|--|--|
+|_Localizar_ | `//Serial.` |
+|_Substituir com_ | `Serial.` |
+
+4. Clique em `Substituir todos`. Isso retira a marcação de comentário do   
+
+![Localizar e substituir](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/SubLoc.PNG?raw=true)  
+5.
