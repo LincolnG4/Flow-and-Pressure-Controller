@@ -65,7 +65,8 @@ Faça o download da tabela de fatores de coreção dos gases em  [DOWNLOAD](http
 > **A tela do produto está funcionando mas ele não retorna nenhum valor de medição**
 
 - Certifique-se que os conectores da tela estão soldados corretamente 
-- Conecte o Arduino na porta USB do seu computador e siga os passos  
+- Conecte o Arduino na porta USB do seu computador e siga os passos  do tópico `3.3.1.1`
+- Certifique-se que não aparecerá nenhuma mensagem de erro no monitor
 
 # 2. Software Utilizados
 
@@ -187,7 +188,9 @@ Caso você esteja desconfiado que o Arduino não está funcionando corretamente,
 |_Localizar_ | `//Serial.` |
 |_Substituir com_ | `Serial.` |
 
-4. Clique em `Substituir todos`. Isso retira a marcação de comentário do   
+4. Clique em `Substituir todos`. Isso retira a marcação de comentário das mensagens serial de debug, ou seja, após as substituições as mensagens de rotina do arduino serão mostradas via USB
 
 ![Localizar e substituir](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/SubLoc.PNG?raw=true)  
-5.
+5. Carregue o código, ao fim do carregamento, desconecte o USB e conecte novamente.
+6. Clique em `Ferramentas` > `Monitor Serial`
+7. Agora todas as atividades do Arduino serão mostradas no monitor.
