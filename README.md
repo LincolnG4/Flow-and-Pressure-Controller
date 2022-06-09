@@ -153,7 +153,7 @@ Com todas as bibliotecas configuradas, é possível desenvolver e carregar o có
 ![Download repositorio](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/repoDownlod.PNG?raw=true)
 
 ### 3.3.1 Arduino
-- Abra o [`Arduino IDE`](#software-utilizados) em seu computador e vá em `Arquivo` > `Abrir`
+- Abra o [`Arduino IDE`](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/README.md#2Software-Utilizados) em seu computador e vá em `Arquivo` > `Abrir`
 - Vá até a pasta onde voce descompactou o repositório repositório, navegue por `Flow-and-Pressure-Controller-main` > `project` > `main.ino`   
 - Certifique-se que a pasta `lib` esta na mesma pasta que o `main.lib`  
 ![ConfMain](https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/lib.PNG?raw=true)
