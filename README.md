@@ -34,6 +34,29 @@ Lista de desejos para o futuro do projeto:
  - Armazenamento: cartão microSD até 64 GB e 15GB em nuvem
  - Portas: 4 entradas DB9-macho, 1 entrada RJ45-femea e uma porta usb (debug)
 
+## 1.1 Componentes
+
+| Componente | Unidade | Preço/unidade (R$) | Total | Link | 
+|--|--|--|--|--|
+|Arduino Mega|1| 200,00 | 200,00  | [Compre](https://www.baudaeletronica.com.br/arduino-mega-2560-compativel-cabo-usb.html) |
+| Capacitor 1uF |9| 0,23 | 2,07 | [Compre](https://www.eletrogate.com/capacitor-eletrolitico-1uf-x-50v ) |
+| Conector DB9|4|3,00  | 12,00 |  |
+| Conector RJ45 |1|4,00 | 4,00  |  |
+| Conector Alimentação|1| 2,50 | 2,50  |  |
+| Fonte de alimentação 24V |1| 30,00 | 30,00 |  |
+| Modulo Leitor de microSD | 1 | 12,00 | 12,00 |  |
+| Modulo LM2596 StepDown | 1 |15,00  | 15,00  |  |
+| Modulo WiFi ESP8266 |1| 20,00 | 20,00  | [Compre](https://www.eletrogate.com/modulo-wifi-serial-esp8266-esp-01) |
+| Resistor 4.7k Ohms |6|0,05| 0,30 | [Compre](https://www.eletrogate.com/resistor-4k7-1-4w-10-unidades ) |
+| Resistor 470 Ohms |8| 0,05 |0,40 |[Compre](https://www.eletrogate.com/resistor-4k7-1-4w-10-unidades )  |
+| Resistor 220 Ohms |1| 0,05 | 0,05  |[Compre](https://www.eletrogate.com/resistor-4k7-1-4w-10-unidades ) |
+| RTC 1302 | 1 | 10,00 |10,00 |  |
+| Tela Nextion 320x240 |1| 120,00 |120,00  |  |
+| Transistor BC337 |4| 0,27 | 1,08 |  |
+| __TOTAL__ ||  |  __544,40__|  |
+
+
+
 # 2. Software Utilizados
 
 | SOFTWARE        | DESCRIÇÃO|DOWNLOAD |
@@ -89,7 +112,7 @@ Versão da placa: esp8266 2.4.3
 
 
 
-### 3.2.1 Como instalar uma biblioteca 
+### 3.2.2 Como instalar uma biblioteca 
 
  1. Abra o link para o donwload da biblioteca (ex: `https://github.com/itead/ITEADLIB_Arduino_Nextion`) e faça o download do `.ZIP`  
 ![download](https://sites.northwestern.edu/researchcomputing/files/2021/05/github.png) 
@@ -98,21 +121,34 @@ Versão da placa: esp8266 2.4.3
 3. Selecione a biblioteca que você fez o download no Passo 1 
 
 
-### 3.2.2 Como instalar os gerenciador de placa 
+### 3.2.3 Como instalar os gerenciador de placa 
 
 #### Arduino 
 
 1. Abra o `Arduino IDE` e vá em `Ferramentas`>`Placa`>`Gerenciador de placas`  
 
-![Como programar o NodeMCU com Arduino IDE - Tutoriais - RoboCore](https://www.robocore.net/upload/tutoriais/162_img_3_H.png)
+![Como programar o NodeMCU com Arduino IDE ](https://www.robocore.net/upload/tutoriais/162_img_3_H.png)
 2. Procure pela placa `Arduino AVR Boards` e selecione a versão `1.8.3`  
 _______
 #### ESP01
 1.Abra o `Arduino IDE` e vá em `Arquivos`>`Preferências`  
 2. No campo `URLs adicionais de Gerenciadores de Placas`, insira o link  `http://arduino.esp8266.com/stable/package_esp8266com_index.json`  
 
-![Como programar o NodeMCU com Arduino IDE - Tutoriais - RoboCore](https://www.robocore.net/upload/tutoriais/162_img_2_H.png)
+![Como programar o NodeMCU com Arduino IDE](https://www.robocore.net/upload/tutoriais/162_img_2_H.png)
 3. Vá em `Ferramentas`>`Placa`>`Gerenciador de placas`  
 4. Procure pela placa `esp8266 by ESP8266 community` e selecione a versão `2.4.3`  
  
+## 3.3  Implementando firmware
+Com todas as bibliotecas configuradas, é possível desenvolver e carregar o código para o  Arduino, Esp e Nextion.
 
+`Faça o download desse respositório e descompacte em alguma pasta do seu computado`:
+![Download repositorio](
+https://github.com/LincolnG4/Flow-and-Pressure-Controller/blob/main/img/repoDownlod.PNG?raw=true)
+
+### Arduino
+
+- Abra o [`Arduino IDE`](#software-utilizados) em seu computador e vá em `Arquivo` > `Abrir`
+- Vá até a pasta onde voce descompactou o repositório repositório, navegue por `Flow-and-Pressure-Controller-main` > `project` > `main.ino` 
+
+- Conecte o `Arduino Mega` via porta `USB`
+- No 
