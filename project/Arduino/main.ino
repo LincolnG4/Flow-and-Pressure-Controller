@@ -26,8 +26,8 @@ float ReadCalibrate(NexText t_calibrate){
 
 void setup() {
   
-  Serial1.begin(115200); // Serial to control Display
-  Serial2.begin(115200); // Serial to send data to ESP32
+  Serial2.begin(115200); // Serial to control Display
+  Serial1.begin(115200); // Serial to send data to ESP32
 
   /*
   * @SERIAL DEBUGGING
@@ -567,7 +567,7 @@ void loop() {
       // ESP 01 SEND MESSAGE 
       if (unix - ESP_TIMER >= ESP_DELAY){
           ESP_MESSAGE = String(PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,MFC1_value,MFC2_value,MFC3_value,MFC4_value)) + "," + String(MFC1_value) + "," + String(MFC2_value) + "," + String(MFC3_value) + "," + String(MFC4_value);
-          Serial2.println(ESP_MESSAGE);
+          Serial1.println(ESP_MESSAGE);
           ESP_TIMER = unix; // ESP time reference
       }
     }
