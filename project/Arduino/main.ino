@@ -107,6 +107,8 @@ void setup() {
   }
 
   //Serial.println("[INFO]- Setup is done!");
+
+  //myRTC.setDS1302Time(18,20, 15,2, 11, 7, 2022);
 }
 
 
