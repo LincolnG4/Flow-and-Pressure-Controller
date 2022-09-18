@@ -26,7 +26,7 @@ float ReadCalibrate(NexText t_calibrate){
 
 void setup() {
   
-  Serial2.begin(115200); // Serial to control Display
+  //Serial2.begin(115200); // Serial to control Display
   Serial1.begin(115200); // Serial to send data to ESP32
 
   /*
@@ -142,7 +142,7 @@ void loop() {
     */
 
     bt8.getValue(&dual_state);  // Master-key status
-
+    
     if(dual_state) // Master-key ON
     {
       Pirani_t = PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,MFC1_value,MFC2_value,MFC3_value,MFC4_value);
