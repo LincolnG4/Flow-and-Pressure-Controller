@@ -26,7 +26,7 @@ float ReadCalibrate(NexText t_calibrate){
 
 void setup() {
   
-  //Serial2.begin(115200); // Serial to control Display
+  Serial2.begin(115200); // Serial to control Display
   Serial1.begin(115200); // Serial to send data to ESP32
 
   /*
@@ -148,14 +148,15 @@ void loop() {
       Pirani_t = PiraniRead(checkbox1,checkbox2,checkbox3,checkbox4,t8,t19,t20,t21,MFC1_value,MFC2_value,MFC3_value,MFC4_value);
       piraniUpdateScreen(Pirani_t); // Print Pirani value on LCD
 
-      // Read current time from DS1307 module
-      myRTC.updateTime();
-      TimeString = String(myRTC.dayofmonth) + "/" + String(myRTC.month)+ "/" +  String(myRTC.year)  + " " + String(myRTC.hours)  + ":" + String(myRTC.minutes) + ":" + String(myRTC.seconds);
-      stamp.setDateTime(myRTC.year, myRTC.month, myRTC.dayofmonth, myRTC.hours, myRTC.minutes, myRTC.seconds);
+
       
       // Convert time in unix timestamp
-      uint32_t unix = stamp.getUnix();
-
+      uint32_t unix = millis()/1000;
+      
+      // Read current time from DS1307 module
+      myRTC.updateTime();
+      TimeString = String(myRTC.dayofmonth) + "/" + String(myRTC.month)+ "/" +  String(myRTC.year)  + " " + String(myRTC.hours)  + ":" + String(myRTC.minutes) + ":" + String(millis());
+      stamp.setDateTime(myRTC.year, myRTC.month, myRTC.dayofmonth, myRTC.hours, myRTC.minutes, myRTC.seconds);
       //Serial.println("[INFO] - MasterKey on");
       //Serial.println("[INFO] - Pirani Torr " + String(Pirani_t));
       //Serial.println("[INFO] - Time " + TimeString);
